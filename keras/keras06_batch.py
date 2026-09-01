@@ -11,7 +11,7 @@ model = Sequential()
 model.add(Dense(10, input_dim=1))
 model.add(Dense(5))
 model.add(Dense(3))
-model.add(Dense(1, input_dim=3))
+model.add(Dense(1))
 
 #3. 컴파일, 훈련
 model.compile(loss='mse', optimizer='adam')
