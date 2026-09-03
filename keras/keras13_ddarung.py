@@ -1,0 +1,122 @@
+# 데이터셋 - https://dacon.io/competitions/open/235576/data
+
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import r2_score, mean_squared_error
+import numpy as np
+import pandas as pd
+
+#1. 데이터
+path = "./_data/ddarung/"
+
+train_csv = pd.read_csv(path + "train.csv", index_col=0)
+print(train_csv)
+# id열 포함 [1459 rows x 11 columns]
+# index_col=0 쓰면 id열(0번째 열)을 인덱스로 써서 실제 데이터는 한 줄 줄어듬 [1459 rows x 10 columns]
+# 맨 윗줄은 컬럼명으로 처리. 데이터 포함 안 함. 맨 첫 행 제외해서 데이터만 1459 행임.
+
+test_csv = pd.read_csv(path + "test.csv", index_col=0)
+print(test_csv) # ... [715 rows x 9 columns]
+
+submission = pd.read_csv(path + "submission.csv", index_col=0)
+print(submission)    # ... [715 rows x 1 columns]
+
+print(train_csv.shape, test_csv.shape, submission.shape)    # (1459, 10) (715, 9) (715, 1)
+
+print(train_csv.columns)    # Index(['hour', 'hour_bef_temperature', 'hour_bef_precipitation',
+    #    'hour_bef_windspeed', 'hour_bef_humidity', 'hour_bef_visibility',
+    #    'hour_bef_ozone', 'hour_bef_pm10', 'hour_bef_pm2.5', 'count'],
+    #   dtype='str')
+
+print(train_csv.info())
+# ..#  0   hour                    1459 non-null   int64  
+#  1   hour_bef_temperature    1457 non-null   float64
+#  2   hour_bef_precipitation  1457 non-null   float64
+#  3   hour_bef_windspeed      1450 non-null   float64
+#  4   hour_bef_humidity       1457 non-null   float64
+#  5   hour_bef_visibility     1457 non-null   float64
+#  6   hour_bef_ozone          1383 non-null   float64
+#  7   hour_bef_pm10           1369 non-null   float64
+#  8   hour_bef_pm2.5          1342 non-null   float64
+#  9   count                   1459 non-null   float64
+# dtypes: float64(9), int64(1)
+# memory usage: 125.4 KB
+# None
+# 결측지 존재하므로 결측치 처리 필요
+
+print(test_csv.info())
+# <class 'pandas.DataFrame'>
+# Index: 715 entries, 0 to 2177
+# Data columns (total 9 columns):
+#  #   Column                  Non-Null Count  Dtype  
+# ---  ------                  --------------  -----  
+#  0   hour                    715 non-null    int64  
+#  1   hour_bef_temperature    714 non-null    float64
+#  2   hour_bef_precipitation  714 non-null    float64
+#  3   hour_bef_windspeed      714 non-null    float64
+#  4   hour_bef_humidity       714 non-null    float64
+#  5   hour_bef_visibility     714 non-null    float64
+#  6   hour_bef_ozone          680 non-null    float64
+#  7   hour_bef_pm10           678 non-null    float64
+#  8   hour_bef_pm2.5          679 non-null    float64
+# dtypes: float64(8), int64(1)
+# memory usage: 55.9 KB
+# None
+# 결측지 존재하므로 결측치 처리 필요
+
+# ----------------------결측치 처리 1. 삭제--------------------
+train_csv = train_csv.dropna()
+print(train_csv)    # ... [1328 rows x 10 columns]
+
+######### train_csv를 x와 y로 분리. ########
+x = train_csv.drop(['count'], axis=1)   # count 열 삭제. axis=0은 행 삭제
+print(x)    # ... [1328 rows x 9 columns]
+
+y = train_csv['count']
+print(y)    # ... Name: count, Length: 1328, dtype: float64
+print(y.shape)  # (1328,)
+
+x_train, x_test, y_train, y_test = train_test_split(
+    x, y,
+    test_size=0.3,
+    random_state=42
+)
+
+#2. 모델 구성
+model = Sequential()
+model.add(Dense(18, input_dim=9))
+model.add(Dense(27))
+model.add(Dense(36))
+model.add(Dense(18))
+model.add(Dense(9))
+model.add(Dense(1))
+
+#3. 컴파일, 훈련
+model.compile(loss='mse', optimizer='adam')
+model.fit(x_train, y_train, epochs=1000, batch_size=32)
+
+#4. 평가, 예측
+loss = model.evaluate(x_test, y_test)
+print("loss : ", loss)
+
+y_predict = model.predict(x_test)
+
+mse = mean_squared_error(y_test, y_predict)
+print("mse : ", mse)
+
+def RMSE(y_test, y_predict) :
+    return np.sqrt(mean_squared_error(y_test, y_predict))
+
+rmse = RMSE(y_test, y_predict)
+print("rmse : ", rmse)
+
+# Results
+
+# Epoch 1000/1000
+# 30/30 ━━━━━━━━━━━━━━━━━━━━ 0s 1ms/step - loss: 2809.8721 
+# 13/13 ━━━━━━━━━━━━━━━━━━━━ 0s 3ms/step - loss: 2963.9060 
+# loss :  2963.906005859375
+# 13/13 ━━━━━━━━━━━━━━━━━━━━ 0s 4ms/step 
+# mse :  2963.9060830907433
+# rmse :  54.44176781746477
