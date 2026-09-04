@@ -8,7 +8,14 @@ import numpy as np
 import pandas as pd
 
 #1. 데이터
-path = "./_data/ddarung/"
+path = "./_data/ddarung/"   # 상대경로
+# path = "c:/study/_data/ddarung/" # 절대경로
+# path = "c:\study\_data\ddarung\" # 끝에 역슬래시 + 예약어랑 겹쳐서 에러남. \s, \n, \t
+# path = "c://study//_data//ddarung/" # 이것도 가능
+# path = "c:\\study\\_data\\ddarung\\" # 역슬래시에서 예약어랑 겹침 방지
+# path = "c:\study\\_data/ddarung\\" # 가능은 함.
+
+
 
 train_csv = pd.read_csv(path + "train.csv", index_col=0)
 print(train_csv)
@@ -86,15 +93,18 @@ x_train, x_test, y_train, y_test = train_test_split(
 #2. 모델 구성
 model = Sequential()
 model.add(Dense(18, input_dim=9))
-model.add(Dense(27))
-model.add(Dense(36))
 model.add(Dense(18))
-model.add(Dense(9))
+model.add(Dense(18))
+model.add(Dense(18))
+model.add(Dense(18))
+model.add(Dense(18))
+model.add(Dense(18))
+model.add(Dense(18))
 model.add(Dense(1))
 
 #3. 컴파일, 훈련
 model.compile(loss='mse', optimizer='adam')
-model.fit(x_train, y_train, epochs=1000, batch_size=32)
+model.fit(x_train, y_train, epochs=2000, batch_size=32)
 
 #4. 평가, 예측
 loss = model.evaluate(x_test, y_test)
@@ -110,6 +120,23 @@ def RMSE(y_test, y_predict) :
 
 rmse = RMSE(y_test, y_predict)
 print("rmse : ", rmse)
+
+"""
+    python-기초
+    블럭 주석 처리-" 3개
+
+    하이퍼파라미터 튜닝
+        - radom_state
+        - train_size
+        - 레이어 depth
+        - 노트 갯수
+        - epochs
+        - batch_size
+"""
+
+"""
+    파라미터 튜닝 시 파라미터값 적어두기. 명세.
+"""
 
 # Results
 
