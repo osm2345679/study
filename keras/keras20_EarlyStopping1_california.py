@@ -34,8 +34,8 @@ from tensorflow.keras.callbacks import EarlyStopping
 es = EarlyStopping(
     monitor='val_loss',
     mode = 'min',
-    patience=2,    # 임계값
-    restore_best_weights=True,  # 디폴트는 False. False면 스탑 됐을 때의 가중치를 반환.
+    patience = 2,    # 임계값
+    restore_best_weights = True,  # 디폴트는 False. False면 스탑 됐을 때의 가중치를 반환.
 )
 # 클래스. 선언하고 fit에서 callback 추가해서 사용.
 

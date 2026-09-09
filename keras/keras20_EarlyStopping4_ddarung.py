@@ -1,0 +1,169 @@
+# 19-4 카피
+# 데이터셋 - https://dacon.io/competitions/open/235576/data
+
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+from tensorflow.keras.callbacks import EarlyStopping
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import r2_score, mean_squared_error
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+#1. 데이터
+path = "./_data/ddarung/"   # 상대경로
+# path = "c:/study/_data/ddarung/" # 절대경로
+# path = "c:\study\_data\ddarung\" # 끝에 역슬래시 + 예약어랑 겹쳐서 에러남. \s, \n, \t
+# path = "c://study//_data//ddarung/" # 이것도 가능
+# path = "c:\\study\\_data\\ddarung\\" # 역슬래시에서 예약어랑 겹침 방지
+# path = "c:\study\\_data/ddarung\\" # 가능은 함.
+
+
+
+train_csv = pd.read_csv(path + "train.csv", index_col=0)
+print(train_csv)
+# id열 포함 [1459 rows x 11 columns]
+# index_col=0 쓰면 id열(0번째 열)을 인덱스로 써서 실제 데이터는 한 줄 줄어듬 [1459 rows x 10 columns]
+# 맨 윗줄은 컬럼명으로 처리. 데이터 포함 안 함. 맨 첫 행 제외해서 데이터만 1459 행임.
+
+test_csv = pd.read_csv(path + "test.csv", index_col=0)
+print(test_csv) # ... [715 rows x 9 columns]
+
+submission = pd.read_csv(path + "submission.csv", index_col=0)
+print(submission)    # ... [715 rows x 1 columns]
+
+print(train_csv.shape, test_csv.shape, submission.shape)    # (1459, 10) (715, 9) (715, 1)
+
+print(train_csv.columns)    # Index(['hour', 'hour_bef_temperature', 'hour_bef_precipitation',
+    #    'hour_bef_windspeed', 'hour_bef_humidity', 'hour_bef_visibility',
+    #    'hour_bef_ozone', 'hour_bef_pm10', 'hour_bef_pm2.5', 'count'],
+    #   dtype='str')
+
+print(train_csv.info())
+# ..#  0   hour                    1459 non-null   int64  
+#  1   hour_bef_temperature    1457 non-null   float64
+#  2   hour_bef_precipitation  1457 non-null   float64
+#  3   hour_bef_windspeed      1450 non-null   float64
+#  4   hour_bef_humidity       1457 non-null   float64
+#  5   hour_bef_visibility     1457 non-null   float64
+#  6   hour_bef_ozone          1383 non-null   float64
+#  7   hour_bef_pm10           1369 non-null   float64
+#  8   hour_bef_pm2.5          1342 non-null   float64
+#  9   count                   1459 non-null   float64
+# dtypes: float64(9), int64(1)
+# memory usage: 125.4 KB
+# None
+# 결측지 존재하므로 결측치 처리 필요
+
+print(test_csv.info())
+# <class 'pandas.DataFrame'>
+# Index: 715 entries, 0 to 2177
+# Data columns (total 9 columns):
+#  #   Column                  Non-Null Count  Dtype  
+# ---  ------                  --------------  -----  
+#  0   hour                    715 non-null    int64  
+#  1   hour_bef_temperature    714 non-null    float64
+#  2   hour_bef_precipitation  714 non-null    float64
+#  3   hour_bef_windspeed      714 non-null    float64
+#  4   hour_bef_humidity       714 non-null    float64
+#  5   hour_bef_visibility     714 non-null    float64
+#  6   hour_bef_ozone          680 non-null    float64
+#  7   hour_bef_pm10           678 non-null    float64
+#  8   hour_bef_pm2.5          679 non-null    float64
+# dtypes: float64(8), int64(1)
+# memory usage: 55.9 KB
+# None
+# 결측지 존재하므로 결측치 처리 필요
+
+# ----------------------결측치 처리 1. 삭제--------------------
+train_csv = train_csv.dropna()
+print(train_csv)    # ... [1328 rows x 10 columns]
+
+######### train_csv를 x와 y로 분리. ########
+x = train_csv.drop(['count'], axis=1)   # count 열 삭제. axis=0은 행 삭제
+print(x)    # ... [1328 rows x 9 columns]
+
+y = train_csv['count']
+print(y)    # ... Name: count, Length: 1328, dtype: float64
+print(y.shape)  # (1328,)
+
+x_train, x_test, y_train, y_test = train_test_split(
+    x, y,
+    test_size=0.2,
+    random_state=42
+)
+
+#2. 모델 구성
+model = Sequential()
+model.add(Dense(18, input_dim=9))
+model.add(Dense(18))
+model.add(Dense(18))
+model.add(Dense(18))
+model.add(Dense(18))
+model.add(Dense(18))
+model.add(Dense(18))
+model.add(Dense(18))
+model.add(Dense(1))
+
+#3. 컴파일, 훈련
+model.compile(loss='mse', optimizer='adam')
+es = EarlyStopping(
+    monitor = 'val_loss',
+    mode = min,
+    patience = 150,
+    restore_best_weights = True
+)
+hist = model.fit(x_train, y_train, epochs=2000, batch_size=32, verbose=1, validation_split=0.25, callbacks=[es])
+
+#4. 평가, 예측
+loss = model.evaluate(x_test, y_test)
+print("loss : ", loss)
+
+y_predict = model.predict(x_test)
+
+mse = mean_squared_error(y_test, y_predict)
+print("mse : ", mse)
+
+def RMSE(y_test, y_predict) :
+    return np.sqrt(mean_squared_error(y_test, y_predict))
+
+rmse = RMSE(y_test, y_predict)
+print("rmse : ", rmse)
+
+"""
+    python-기초
+    블럭 주석 처리-" 3개
+
+    하이퍼파라미터 튜닝
+        - radom_state
+        - train_size
+        - 레이어 depth
+        - 노트 갯수
+        - epochs
+        - batch_size
+"""
+
+"""
+    파라미터 튜닝 시 파라미터값 적어두기. 명세.
+"""
+plt.rcParams['font.family'] = 'Malgun Gothic'   # 한글 깨짐 방지
+plt.rcParams['axes.unicode_minus'] = False  # minus 기호 깨짐 방지
+plt.figure(figsize=(9,6))
+plt.plot(hist.history['loss'], c='orange', label='loss')
+plt.plot(hist.history['val_loss'], c='purple', label='val_loss')
+plt.legend(loc='upper right')
+plt.title('따릉이 Loss')
+plt.xlabel('Epochs')
+plt.ylabel('Loss / Val_loss')
+plt.grid()
+plt.show()
+
+# Results
+
+# Epoch 462/2000
+# 25/25 ━━━━━━━━━━━━━━━━━━━━ 0s 2ms/step - loss: 2878.4548 - val_loss: 2901.2441
+# 9/9 ━━━━━━━━━━━━━━━━━━━━ 0s 534us/step - loss: 2946.2188
+# loss :  2946.21875
+# 9/9 ━━━━━━━━━━━━━━━━━━━━ 0s 6ms/step 
+# mse :  2946.2188086631286
+# rmse :  54.27908260705157

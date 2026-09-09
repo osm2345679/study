@@ -35,10 +35,4 @@ model.fit(x_train, y_train, epochs=2400, batch_size=256, verbose=1, validation_s
 loss = model.evaluate(x_test, y_test)
 print("loss : ", loss)
 
-# Results
-
-# Epoch 2400/2400
-# 2/2 ━━━━━━━━━━━━━━━━━━━━ 0s 36ms/step - loss: 2779.1367 - val_loss: 3276.5144
-# 3/3 ━━━━━━━━━━━━━━━━━━━━ 0s 6ms/step - loss: 2938.9602 
-# loss :  2938.960205078125
-# PS C:\study> 
+c
