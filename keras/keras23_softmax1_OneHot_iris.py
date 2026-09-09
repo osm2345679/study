@@ -6,6 +6,8 @@ from tensorflow.keras.callbacks import EarlyStopping
 from sklearn.model_selection import train_test_split
 from sklearn.datasets import load_iris
 from sklearn.metrics import accuracy_score
+from sklearn.preprocessing import MultiLabelBinarizer
+from sklearn.preprocessing import OneHotEncoder
 import matplotlib.pyplot as plt
 plt.rcParams['font.family'] = 'Malgun Gothic'
 import time
@@ -39,8 +41,31 @@ One-hot encoding
  [0,0,1]]   #(5,3)
 '''
 
-from tensorflow.keras.utils import to_categorical
-y = to_categorical(y)
+################### One-hot encoding method 1. keras.utils - to_categorical() ######################
+
+# from tensorflow.keras.utils import to_categorical
+# y = to_categorical(y)
+
+################### One-hot encoding method 2. pandas - pd.get_dummies()) ######################
+
+# y = pd.get_dummies(y, dtype=int)
+
+### Below codes are other related class and function ###
+# y = pd.from_dummies(y)
+# y = pd.Categorical(y)
+
+################### One-hot encoding method 3. sklearn - OneHotEncoder / fit_transform()) ######################
+
+# y = y.reshape(150, 1)
+y = y.reshape(-1, 1)    # -1로 놓으면 배열 길이와 다른 차원을 통해 알아서 추론함.
+# reshape 조건 - 1. 내용 유지, 2. 순서 유지 되는 경우 가능.
+y = OneHotEncoder(sparse_output=False).fit_transform(y) # sparse_out : defalut는 True. True면 sparse matrix를 CSR 형식으로 리턴함.
+
+### Below codes are other related class and function ###
+# mlb = MultiLabelBinarizer()
+# y = y.reshape(-1, 1)
+# y = mlb.fit_transform(y)
+
 print(y)
 print(y.shape)
 
@@ -76,7 +101,7 @@ model.fit(x_train, y_train,
     batch_size = 12,
     callbacks= [es],
     validation_split=0.2
-    )
+)
 end_time = time.time()
 
 # 4. 평가, 예측
@@ -86,7 +111,7 @@ print("acc : ", round(results[1]))
 
 y_pred = model.predict(x_test)
 y_argmax = np.argmax(y_pred, axis=1)
-y_met_argmax = to_categorical(y_argmax)
+y_test = np.argmax(y_test, axis=1)
 
 # print(x_test.shape)
 # print(y_pred)
@@ -99,7 +124,7 @@ y_met_argmax = to_categorical(y_argmax)
 # print(y_met_argmax)
 # print(y_met_argmax.shape)
 
-acc = accuracy_score(y_test, y_met_argmax)
+acc = accuracy_score(y_test, y_argmax)
 print("acc_score : ", acc)
 print("걸린 시간 : ", round(end_time - start_time, 2), "초")
 
