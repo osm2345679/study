@@ -1,3 +1,4 @@
+# 22 카피
 # 데이터셋 : https://www.kaggle.com/competitions/santander-customer-transaction-prediction/data
 
 from tensorflow.keras.models import Sequential
@@ -5,6 +6,7 @@ from tensorflow.keras.layers import Dense
 from tensorflow.keras.callbacks import EarlyStopping
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
+from sklearn.preprocessing import MinMaxScaler
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -71,6 +73,11 @@ print(np.unique(x, return_counts=True))
 # (array([-90.2525, -83.1075, -82.2573, ...,  70.272 ,  70.8691,  74.0321], shape=(828834,)), array([1, 1, 1, ..., 1, 1, 1], shape=(828834,)))
 print(np.unique(y, return_counts=True)) # (array([0, 1]), array([179902,  20098]))
 
+scaler = MinMaxScaler()
+scaler.fit(x_train)
+x_train = scaler.transform(x_train)
+x_test = scaler.transform(x_test)
+
 #2. 모델 구성
 model = Sequential()
 model.add(Dense(200, input_dim=200, activation='relu'))
@@ -136,3 +143,13 @@ submission_csv.to_csv(path + "submit/" + "0908_1642.csv")
 # 1250/1250 ━━━━━━━━━━━━━━━━━━━━ 1s 739us/step 
 # acc_score :  0.909375
 # 6250/6250 ━━━━━━━━━━━━━━━━━━━━ 4s 700us/step 
+#
+# MinMaxScaler
+# Epoch 41/3000
+# 3750/3750 ━━━━━━━━━━━━━━━━━━━━ 9s 2ms/step - acc: 0.9145 - loss: 0.2322 - val_acc: 0.9147 - val_loss: 0.2351
+# 1250/1250 ━━━━━━━━━━━━━━━━━━━━ 1s 918us/step - acc: 0.9128 - loss: 0.2336
+# loss :  [0.2335789054632187, 0.9127500057220459]
+# 걸린 시간 :  387.88 초
+# 1250/1250 ━━━━━━━━━━━━━━━━━━━━ 1s 744us/step
+# acc_score :  0.91275
+# 6250/6250 ━━━━━━━━━━━━━━━━━━━━ 5s 758us/step 

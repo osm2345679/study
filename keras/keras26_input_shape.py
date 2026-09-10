@@ -1,3 +1,12 @@
+#23-1 카피
+
+"""
+원데이터 shape -> input_shape
+(n,4) -> (4,)
+(n,100,3) -> (100, 3)
+(n,100,100,3) -> (100, 100,3)
+"""
+
 import numpy as np
 import pandas as pd
 from tensorflow.keras.models import Sequential
@@ -8,16 +17,7 @@ from sklearn.datasets import load_iris
 from sklearn.metrics import accuracy_score
 from sklearn.preprocessing import MultiLabelBinarizer
 from sklearn.preprocessing import OneHotEncoder
-import matplotlib.pyplot as plt
-plt.rcParams['font.family'] = 'Malgun Gothic'
 import time
-
-"""
-다중 분류 프로세스
-1. 데이터 받으면 OnehotEncoding 하기 - to_categorical
-2. 아웃풋 레이어에서 activation은 - softmax
-3. 컴파일에서 loss는 - categorical_crossentropy
-"""
 
 # 1. 데이터
 datasets = load_iris()
@@ -40,25 +40,6 @@ One-hot encoding
  [0,1,0]
  [0,0,1]]   #(5,3)
 '''
-
-################### One-hot encoding method 1. keras.utils - to_categorical() ######################
-
-# from tensorflow.keras.utils import to_categorical
-# y = to_categorical(y)
-
-################### One-hot encoding method 2. pandas - pd.get_dummies()) ######################
-
-# y = pd.get_dummies(y, dtype=int)
-
-### Below codes are other related class and function ###
-# y = pd.from_dummies(y)
-# y = pd.Categorical(y)
-
-################### One-hot encoding method 3. sklearn - OneHotEncoder / fit_transform()) ######################
-
-# reshape가 안 되는 경우(pandas로 가저온 경우 series로 옴) ndarray로 바꾸는 법
-# y = np.array(y)
-# y = y.to_numpy()
 
 # y = y.reshape(150, 1)
 y = y.reshape(-1, 1)    # -1로 놓으면 배열 길이와 다른 차원을 통해 알아서 추론함.
@@ -85,7 +66,8 @@ print(x_train.shape, x_test.shape, y_train.shape, y_test.shape) # (120, 4) (30, 
 
 # 2. 모델 구성
 model = Sequential()
-model.add(Dense(10, input_dim=4, activation='relu'))
+# model.add(Dense(10, input_dim=4, activation='relu'))
+model.add(Dense(10, input_shape=(4,), activation='relu'))
 model.add(Dense(10, activation='relu'))
 model.add(Dense(10, activation='relu'))
 model.add(Dense(10, activation='relu'))
@@ -116,17 +98,6 @@ print("acc : ", round(results[1]))
 y_pred = model.predict(x_test)
 y_argmax = np.argmax(y_pred, axis=1)
 y_test = np.argmax(y_test, axis=1)
-
-# print(x_test.shape)
-# print(y_pred)
-# print(y_argmax)
-# print(y_argmax.shape)
-
-# print(y_test)
-# print(y_test.shape)
-
-# print(y_met_argmax)
-# print(y_met_argmax.shape)
 
 acc = accuracy_score(y_test, y_argmax)
 print("acc_score : ", acc)
