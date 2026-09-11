@@ -1,7 +1,7 @@
-# 27 카피
+# 29-1 카피
 
 from sklearn.datasets import fetch_california_housing
-from tensorflow.keras.models import Sequential
+from tensorflow.keras.models import Sequential, load_model
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.callbacks import EarlyStopping
 from sklearn.model_selection import train_test_split
@@ -14,14 +14,6 @@ datasets = fetch_california_housing()
 x = datasets.data
 y = datasets.target
 print(x.shape, y.shape) # (20640, 8) (20640,)
-
-"""
-MinMaxScaler
-
-원값 - Min
-----------
-Max - Min
-"""
 
 x_train, x_test, y_train, y_test = train_test_split(
     x,y,
@@ -44,11 +36,22 @@ print(np.min(x_train), np.max(x_train))
 print(np.min(x_test), np.max(x_test))
 
 #2. 모델구성
-model = Sequential()
-model.add(Dense(8, input_dim=8))
-model.add(Dense(8, activation='relu'))
-model.add(Dense(8, activation='relu'))
-model.add(Dense(1))
+# model = Sequential()
+# model.add(Dense(8, input_dim=8))
+# model.add(Dense(8, activation='relu'))
+# model.add(Dense(8, activation='relu'))
+# model.add(Dense(1))
+
+# model.summary()
+
+path = './_save/keras29/'
+# model.save(path + 'keras29_1_save_model.keras')
+model = load_model(path + 'keras29_1_save_model.keras')
+
+model.summary()
+
+
+# exit()
 
 #3. 컴파일, 훈련
 model.compile(loss='mse', optimizer='adam')
@@ -69,10 +72,6 @@ loss = model.evaluate(x_test, y_test)
 print("loss : ", loss)
 
 print("걸린 시간 : ", round(end_time - start_time, 2), "초")
-# print("=================loss================")
-# print(hist.history['loss'])
-# print("=================val_loss================")
-# print(hist.history['val_loss'])
 
 plt.rcParams['font.family'] = 'Malgun Gothic'   # 한글 깨짐 방지
 plt.rcParams['axes.unicode_minus'] = False  # minus 기호 깨짐 방지

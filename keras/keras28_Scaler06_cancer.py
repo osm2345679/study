@@ -7,7 +7,7 @@ from tensorflow.keras.layers import Dense
 from tensorflow.keras.callbacks import EarlyStopping
 from sklearn.model_selection import train_test_split
 from sklearn.datasets import load_breast_cancer
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import MinMaxScaler, StandardScaler, MaxAbsScaler, RobustScaler
 import time
 import matplotlib.pyplot as plt
 
@@ -53,7 +53,11 @@ x_train, x_test, y_train, y_test = train_test_split(
 print(np.unique(y_train, return_counts=True))   # (array([0, 1]), array([170, 285]))
 print(np.unique(y_test, return_counts=True))    # (array([0, 1]), array([42, 72]))
 
-scaler = MinMaxScaler()
+# scaler = MinMaxScaler()
+# scaler = StandardScaler()
+# scaler = MaxAbsScaler()
+scaler = RobustScaler()
+
 scaler.fit(x_train)
 x_train = scaler.transform(x_train)
 x_test = scaler.transform(x_test)
@@ -91,7 +95,7 @@ print("loss : ", round(loss[0], 4)) # loss :  0.2158
 print("acc : ", round(loss[1], 4))  # acc :  0.9298
 
 y_pred = model.predict(x_test)
-print(y_pred)   # [[2.19274860e-16] [1.00000000e+00] ... [9.97549653e-01]]. sigmoid쓰면 0, 1 사이 값 되고 반올림에서 실제 분류 처리함.
+# print(y_pred)   # [[2.19274860e-16] [1.00000000e+00] ... [9.97549653e-01]]. sigmoid쓰면 0, 1 사이 값 되고 반올림에서 실제 분류 처리함.
 
 plt.figure(figsize=(9,6))
 plt.plot(hist.history['loss'], c='red', label='loss')
@@ -111,19 +115,54 @@ acc_score = accuracy_score(y_test, np.round(y_pred))    # accuracy_score를 위�
 print("acc_score :", acc_score) # acc_score : 0.9210526315789473
 
 # Results
-
-
-
-
-
-
-
-# Epoch 2000/2000
-# 205/205 ━━━━━━━━━━━━━━━━━━━━ 0s 1ms/step - loss: 21875.4961 - val_loss: 21668.5254
-# 69/69 ━━━━━━━━━━━━━━━━━━━━ 0s 721us/step - loss: 21340.3340
-# loss :  21340.333984375
-# 69/69 ━━━━━━━━━━━━━━━━━━━━ 0s 837us/step
-# r2 :  0.35345906019210815
-# mse :  21340.333984375
-# rmse :  146.08331179287728
-# 203/203 ━━━━━━━━━━━━━━━━━━━━ 0s 398us/step
+# Epoch 183/2000
+# 11/11 ━━━━━━━━━━━━━━━━━━━━ 0s 5ms/step - acc: 0.9501 - loss: 0.1341 - val_acc: 0.9035 - val_loss: 0.2120
+# 4/4 ━━━━━━━━━━━━━━━━━━━━ 0s 0s/step - acc: 0.9298 - loss: 0.1685  
+# loss :  0.1685
+# acc :  0.9298
+# 4/4 ━━━━━━━━━━━━━━━━━━━━ 0s 17ms/step
+# ...
+# 걸린 시간 :  13.38 초
+# acc_score : 0.9298245614035088
+#
+# MinMaxScaler
+# Epoch 131/2000
+# 11/11 ━━━━━━━━━━━━━━━━━━━━ 0s 3ms/step - acc: 1.0000 - loss: 0.0014 - val_acc: 0.9912 - val_loss: 0.0713
+# 4/4 ━━━━━━━━━━━━━━━━━━━━ 0s 4ms/step - acc: 0.9737 - loss: 0.1121 
+# loss :  0.1121
+# acc :  0.9737
+# 4/4 ━━━━━━━━━━━━━━━━━━━━ 0s 16ms/step
+# ...
+# 걸린 시간 :  9.45 초
+# acc_score : 0.9736842105263158
+#
+# StandardScaler
+# Epoch 64/2000
+# 11/11 ━━━━━━━━━━━━━━━━━━━━ 0s 6ms/step - acc: 1.0000 - loss: 7.7650e-05 - val_acc: 0.9825 - val_loss: 0.0732
+# 4/4 ━━━━━━━━━━━━━━━━━━━━ 0s 1ms/step - acc: 0.9825 - loss: 0.0623 
+# loss :  0.0623
+# acc :  0.9825
+# 4/4 ━━━━━━━━━━━━━━━━━━━━ 0s 14ms/step
+# ...
+# 걸린 시간 :  5.19 초
+# acc_score : 0.9824561403508771
+#
+# MaxAbsScaler
+# Epoch 107/2000
+# 11/11 ━━━━━━━━━━━━━━━━━━━━ 0s 4ms/step - acc: 0.9853 - loss: 0.0296 - val_acc: 0.9561 - val_loss: 0.1315
+# 4/4 ━━━━━━━━━━━━━━━━━━━━ 0s 6ms/step - acc: 0.9737 - loss: 0.0633
+# loss :  0.0633
+# acc :  0.9737
+# 4/4 ━━━━━━━━━━━━━━━━━━━━ 0s 16ms/step
+# 걸린 시간 :  7.76 초
+# acc_score : 0.9736842105263158
+#
+# RobustScaler
+# Epoch 57/2000
+# 11/11 ━━━━━━━━━━━━━━━━━━━━ 0s 4ms/step - acc: 1.0000 - loss: 6.3711e-05 - val_acc: 0.9825 - val_loss: 0.2397
+# 4/4 ━━━━━━━━━━━━━━━━━━━━ 0s 0s/step - acc: 0.9123 - loss: 0.1784  
+# loss :  0.1784
+# acc :  0.9123
+# 4/4 ━━━━━━━━━━━━━━━━━━━━ 0s 13ms/step
+# 걸린 시간 :  4.76 초
+# acc_score : 0.9122807017543859

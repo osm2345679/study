@@ -5,7 +5,7 @@ from tensorflow.keras.layers import Dense
 from tensorflow.keras.callbacks import EarlyStopping
 from sklearn.datasets import load_diabetes
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import MinMaxScaler, StandardScaler, MaxAbsScaler, RobustScaler
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -29,7 +29,11 @@ x_train, x_val, y_train, y_val = train_test_split(
     random_state=42
 )
 
-scaler = MinMaxScaler()
+# scaler = MinMaxScaler()
+# scaler = StandardScaler()
+# scaler = MaxAbsScaler()
+scaler = RobustScaler()
+
 scaler.fit(x_train)
 x_train = scaler.transform(x_train)
 x_val = scaler.transform(x_val)
@@ -83,3 +87,21 @@ plt.show()
 # 2/2 ━━━━━━━━━━━━━━━━━━━━ 0s 34ms/step - loss: 3110.3721 - val_loss: 2542.1121
 # 3/3 ━━━━━━━━━━━━━━━━━━━━ 0s 5ms/step - loss: 2897.4326 
 # loss :  2897.4326171875
+
+# StandardScaler
+# Epoch 281/2400
+# 2/2 ━━━━━━━━━━━━━━━━━━━━ 0s 31ms/step - loss: 3029.2778 - val_loss: 2641.5706
+# 3/3 ━━━━━━━━━━━━━━━━━━━━ 0s 11ms/step - loss: 2887.4280
+# loss :  2887.427978515625
+
+# MaxAbsScaler
+# Epoch 439/2400
+# 2/2 ━━━━━━━━━━━━━━━━━━━━ 0s 35ms/step - loss: 3026.6313 - val_loss: 2622.9248
+# 3/3 ━━━━━━━━━━━━━━━━━━━━ 0s 6ms/step - loss: 2934.2805 
+# loss :  2934.280517578125
+
+# RobustScaler
+# Epoch 527/2400
+# 2/2 ━━━━━━━━━━━━━━━━━━━━ 0s 40ms/step - loss: 3008.9358 - val_loss: 2594.3767
+# 3/3 ━━━━━━━━━━━━━━━━━━━━ 0s 8ms/step - loss: 2887.2065 
+# loss :  2887.20654296875

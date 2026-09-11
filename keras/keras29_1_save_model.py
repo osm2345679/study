@@ -1,4 +1,4 @@
-# 27 카피
+# 28-1 카피
 
 from sklearn.datasets import fetch_california_housing
 from tensorflow.keras.models import Sequential
@@ -14,14 +14,6 @@ datasets = fetch_california_housing()
 x = datasets.data
 y = datasets.target
 print(x.shape, y.shape) # (20640, 8) (20640,)
-
-"""
-MinMaxScaler
-
-원값 - Min
-----------
-Max - Min
-"""
 
 x_train, x_test, y_train, y_test = train_test_split(
     x,y,
@@ -50,6 +42,13 @@ model.add(Dense(8, activation='relu'))
 model.add(Dense(8, activation='relu'))
 model.add(Dense(1))
 
+model.summary()
+
+path = './_save/keras29/'
+model.save(path + 'keras29_1_save_model.keras')
+
+exit()
+
 #3. 컴파일, 훈련
 model.compile(loss='mse', optimizer='adam')
 es = EarlyStopping(
@@ -69,10 +68,6 @@ loss = model.evaluate(x_test, y_test)
 print("loss : ", loss)
 
 print("걸린 시간 : ", round(end_time - start_time, 2), "초")
-# print("=================loss================")
-# print(hist.history['loss'])
-# print("=================val_loss================")
-# print(hist.history['val_loss'])
 
 plt.rcParams['font.family'] = 'Malgun Gothic'   # 한글 깨짐 방지
 plt.rcParams['axes.unicode_minus'] = False  # minus 기호 깨짐 방지

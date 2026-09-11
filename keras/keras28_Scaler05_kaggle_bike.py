@@ -6,7 +6,7 @@ from tensorflow.keras.layers import Dense
 from tensorflow.keras.callbacks import EarlyStopping
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, root_mean_squared_log_error, r2_score
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import MinMaxScaler, StandardScaler, MaxAbsScaler, RobustScaler
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -112,17 +112,21 @@ x_train, x_test, y_train, y_test = train_test_split(
     random_state=42
 )
 
-scaler = MinMaxScaler()
+# scaler = MinMaxScaler()
+# scaler = StandardScaler()
+# scaler = MaxAbsScaler()
+scaler = RobustScaler()
+
 scaler.fit(x_train)
 x_train = scaler.transform(x_train)
 x_test = scaler.transform(x_test)
 
 #2. 모델 구성
 model = Sequential()
-model.add(Dense(16, activation='relu', input_dim=8))
-model.add(Dense(8, activation='relu'))
-model.add(Dense(4, activation='relu'))
-model.add(Dense(2, activation='relu'))
+model.add(Dense(200, activation='relu', input_dim=8))
+model.add(Dense(200, activation='relu'))
+model.add(Dense(200, activation='relu'))
+model.add(Dense(200, activation='relu'))
 model.add(Dense(1, activation='relu'))
 
 #3. 컴파일, 훈련
@@ -134,7 +138,7 @@ es = EarlyStopping(
     patience = 100,
     restore_best_weights = True
 )
-hist = model.fit(x_train, y_train, epochs=3000, batch_size=32, verbose=1, validation_split=0.25)
+hist = model.fit(x_train, y_train, epochs=5000, batch_size=64, verbose=1, validation_split=0.25, callbacks=[es])
 
 #4. 평가, 예측
 loss = model.evaluate(x_test, y_test)
@@ -162,7 +166,7 @@ submission.to_csv(path + "submit/" + "submit_0910_1741.csv")
 
 plt.rcParams['font.family'] = 'Malgun Gothic'
 plt.rcParams['axes.unicode_minus'] = False
-plt.figure(figsize=(9,9))
+plt.figure(figsize=(9,6))
 plt.plot(hist.history['loss'], c='green', label='loss')
 plt.plot(hist.history['val_loss'], c='purple', label='val_loss')
 plt.legend(loc='upper left')
@@ -184,4 +188,46 @@ plt.show()
 # rmse :  146.61910554008642
 # 203/203 ━━━━━━━━━━━━━━━━━━━━ 0s 362us/step
 # 
-# MinMaxScaler
+# MinMaxScaler + hyper parameter tuning
+# Epoch 221/5000
+# 205/205 ━━━━━━━━━━━━━━━━━━━━ 0s 1ms/step - loss: 17268.7168 - val_loss: 21571.6660
+# 69/69 ━━━━━━━━━━━━━━━━━━━━ 0s 705us/step - loss: 21006.5293
+# loss :  21006.529296875
+# 69/69 ━━━━━━━━━━━━━━━━━━━━ 0s 843us/step
+# r2 :  0.36357229948043823
+# mse :  21006.52734375
+# rmse :  144.9362871876812
+# 203/203 ━━━━━━━━━━━━━━━━━━━━ 0s 444us/step
+#
+# StandardScaler
+# Epoch 167/5000
+# 205/205 ━━━━━━━━━━━━━━━━━━━━ 0s 1ms/step - loss: 13700.3359 - val_loss: 23620.7949
+# 69/69 ━━━━━━━━━━━━━━━━━━━━ 0s 783us/step - loss: 21247.1973
+# loss :  21247.197265625
+# 69/69 ━━━━━━━━━━━━━━━━━━━━ 0s 892us/step
+# r2 :  0.3562808632850647
+# mse :  21247.1953125
+# rmse :  145.76417705492662
+# 203/203 ━━━━━━━━━━━━━━━━━━━━ 0s 471us/step
+#
+# MaxAbsScaler
+# Epoch 315/5000
+# 103/103 ━━━━━━━━━━━━━━━━━━━━ 0s 1ms/step - loss: 16746.9258 - val_loss: 21830.5332
+# 69/69 ━━━━━━━━━━━━━━━━━━━━ 0s 1ms/step - loss: 21363.4746  
+# loss :  21363.474609375
+# 69/69 ━━━━━━━━━━━━━━━━━━━━ 0s 994us/step
+# r2 :  0.35275799036026
+# mse :  21363.474609375
+# rmse :  146.16249385315987
+# 203/203 ━━━━━━━━━━━━━━━━━━━━ 0s 413us/step
+#
+# RobustScaler
+# Epoch 201/5000
+# 103/103 ━━━━━━━━━━━━━━━━━━━━ 0s 1ms/step - loss: 14025.7441 - val_loss: 23486.1387
+# 69/69 ━━━━━━━━━━━━━━━━━━━━ 0s 661us/step - loss: 21047.2969
+# loss :  21047.296875
+# 69/69 ━━━━━━━━━━━━━━━━━━━━ 0s 908us/step
+# r2 :  0.3623371720314026
+# mse :  21047.294921875
+# rmse :  145.07685867110234
+# 203/203 ━━━━━━━━━━━━━━━━━━━━ 0s 435us/step

@@ -4,7 +4,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras.datasets import boston_housing
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import MinMaxScaler, StandardScaler, MaxAbsScaler, RobustScaler
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -13,7 +13,11 @@ import matplotlib.pyplot as plt
 print(x_train.shape, x_test.shape)  # (404, 13) (102, 13)
 print(y_train.shape, y_test.shape)  # (404,) (102,)
 
-scaler = MinMaxScaler()
+# scaler = MinMaxScaler()
+# scaler = StandardScaler()
+# scaler = MaxAbsScaler()
+scaler = RobustScaler()
+
 scaler.fit(x_train)
 x_train = scaler.transform(x_train)
 x_test = scaler.transform(x_test)
@@ -64,3 +68,21 @@ plt.show()
 # 31/31 ━━━━━━━━━━━━━━━━━━━━ 0s 2ms/step - loss: 20.6260 - val_loss: 30.2503
 # 4/4 ━━━━━━━━━━━━━━━━━━━━ 0s 5ms/step - loss: 23.4597
 # loss :  23.459732055664062
+#
+# StandardScaler
+# Epoch 257/2000
+# 31/31 ━━━━━━━━━━━━━━━━━━━━ 0s 2ms/step - loss: 21.5468 - val_loss: 31.6762
+# 4/4 ━━━━━━━━━━━━━━━━━━━━ 0s 2ms/step - loss: 22.6933 
+# loss :  22.693265914916992
+#
+# MaxAbsScaler
+# Epoch 678/2000
+# 31/31 ━━━━━━━━━━━━━━━━━━━━ 0s 2ms/step - loss: 20.7993 - val_loss: 30.4088
+# 4/4 ━━━━━━━━━━━━━━━━━━━━ 0s 5ms/step - loss: 22.8999 
+# loss :  22.89986801147461
+#
+# RobustScaler
+# Epoch 335/2000
+# 31/31 ━━━━━━━━━━━━━━━━━━━━ 0s 2ms/step - loss: 20.9083 - val_loss: 31.2385
+# 4/4 ━━━━━━━━━━━━━━━━━━━━ 0s 0s/step - loss: 22.1879 
+# loss :  22.1878681182861

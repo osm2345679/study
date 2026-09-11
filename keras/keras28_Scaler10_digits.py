@@ -5,7 +5,7 @@ from tensorflow.keras.callbacks import EarlyStopping
 from sklearn.datasets import load_digits
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import MinMaxScaler ,StandardScaler, MaxAbsScaler, RobustScaler
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -16,8 +16,8 @@ datasets = load_digits()
 x = datasets['data']
 y = datasets['target']
 
-print(x.shape, y.shape)
-print(np.unique(y, return_counts=True))
+print(x.shape, y.shape) # (1797, 64) (1797,)
+print(np.unique(y, return_counts=True)) # (array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]), array([178, 182, 177, 183, 181, 182, 181, 179, 174, 180]))
 
 y = pd.get_dummies(y, dtype=int)
 
@@ -29,17 +29,24 @@ x_train, x_test, y_train, y_test = train_test_split(
     stratify=y
 )
 
-scaler = MinMaxScaler()
+# scaler = MinMaxScaler()
+# scaler = StandardScaler()
+# scaler = MaxAbsScaler()
+scaler = RobustScaler()
+
 scaler.fit(x_train)
 x_train = scaler.transform(x_train)
 x_test = scaler.transform(x_test)
 
 #2. 모델 구성
 model = Sequential()
-model.add(Dense(64, input_dim=64))
-model.add(Dense(64, activation='relu'))
-model.add(Dense(64, activation='relu'))
-model.add(Dense(64, activation='relu'))
+model.add(Dense(256, input_dim=64))
+model.add(Dense(256, activation='relu'))
+model.add(Dense(256, activation='relu'))
+model.add(Dense(256, activation='relu'))
+model.add(Dense(256, activation='relu'))
+model.add(Dense(256, activation='relu'))
+model.add(Dense(256, activation='relu'))
 model.add(Dense(10, activation='softmax'))
 
 #3. 컴파일 , 훈련
@@ -47,14 +54,14 @@ model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['acc']
 es = EarlyStopping(
     monitor = 'val_loss',
     mode='min',
-    patience=50,
+    patience=100,
     restore_best_weights=True
 )
 start_time = time.time()
 hist = model.fit(
     x_train, y_train,
-    epochs=3000,
-    batch_size=32,
+    epochs=1000,
+    batch_size=8,
     verbose=1,
     callbacks=[es],
     validation_split=0.25
@@ -106,3 +113,33 @@ plt.show()
 # 걸린 시간 :  17.37 초
 # 12/12 ━━━━━━━━━━━━━━━━━━━━ 0s 3ms/step 
 # acc :  0.975
+#
+# StandardScaler + Fine-tuning
+# Epoch 325/190000
+# 68/68 ━━━━━━━━━━━━━━━━━━━━ 0s 1ms/step - acc: 1.0000 - loss: 6.6412e-10 - val_acc: 0.9917 - val_loss: 0.0692
+# 12/12 ━━━━━━━━━━━━━━━━━━━━ 0s 2ms/step - acc: 0.9778 - loss: 0.1304 
+# loss :  0.13043555617332458
+# acc :  1
+# 걸린 시간 :  41.78 초
+# 12/12 ━━━━━━━━━━━━━━━━━━━━ 0s 4ms/step 
+# acc :  0.9777777777777777
+#
+# MaxAbsScaler
+# Epoch 121/190000
+# 135/135 ━━━━━━━━━━━━━━━━━━━━ 0s 2ms/step - acc: 1.0000 - loss: 0.0000e+00 - val_acc: 0.9889 - val_loss: 0.2497
+# 12/12 ━━━━━━━━━━━━━━━━━━━━ 0s 2ms/step - acc: 0.9833 - loss: 0.0661  
+# loss :  0.0661407932639122
+# acc :  1
+# 걸린 시간 :  32.03 초
+# 12/12 ━━━━━━━━━━━━━━━━━━━━ 0s 4ms/step 
+# acc :  0.9833333333333333
+#
+# RobustScaler
+# Epoch 121/1000
+# 135/135 ━━━━━━━━━━━━━━━━━━━━ 0s 2ms/step - acc: 1.0000 - loss: 2.2137e-09 - val_acc: 0.9861 - val_loss: 0.1417
+# 12/12 ━━━━━━━━━━━━━━━━━━━━ 0s 2ms/step - acc: 0.9694 - loss: 0.1653  
+# loss :  0.16527247428894043
+# acc :  1
+# 걸린 시간 :  34.65 초
+# 12/12 ━━━━━━━━━━━━━━━━━━━━ 0s 5ms/step 
+# acc :  0.9694444444444444

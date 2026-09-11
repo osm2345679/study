@@ -101,3 +101,15 @@ print("걸린 시간 : ", round(end_time - start_time, 2), "초")
 from sklearn.metrics import accuracy_score
 acc_score = accuracy_score(y_test, np.round(y_pred))    # accuracy_score를 위해 y_pred round 처리
 print("acc_score :", acc_score) # acc_score : 0.9210526315789473
+
+# Results
+#
+# Epoch 183/2000
+# 11/11 ━━━━━━━━━━━━━━━━━━━━ 0s 5ms/step - acc: 0.9501 - loss: 0.1341 - val_acc: 0.9035 - val_loss: 0.2120
+# 4/4 ━━━━━━━━━━━━━━━━━━━━ 0s 0s/step - acc: 0.9298 - loss: 0.1685  
+# loss :  0.1685
+# acc :  0.9298
+# 4/4 ━━━━━━━━━━━━━━━━━━━━ 0s 17ms/step
+# ...
+# 걸린 시간 :  13.38 초
+# acc_score : 0.9298245614035088

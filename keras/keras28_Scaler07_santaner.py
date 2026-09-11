@@ -6,7 +6,7 @@ from tensorflow.keras.layers import Dense
 from tensorflow.keras.callbacks import EarlyStopping
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import MinMaxScaler, StandardScaler, MaxAbsScaler, RobustScaler
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -73,7 +73,11 @@ print(np.unique(x, return_counts=True))
 # (array([-90.2525, -83.1075, -82.2573, ...,  70.272 ,  70.8691,  74.0321], shape=(828834,)), array([1, 1, 1, ..., 1, 1, 1], shape=(828834,)))
 print(np.unique(y, return_counts=True)) # (array([0, 1]), array([179902,  20098]))
 
-scaler = MinMaxScaler()
+# scaler = MinMaxScaler()
+# scaler = StandardScaler()
+# scaler = MaxAbsScaler()
+scaler = RobustScaler()
+
 scaler.fit(x_train)
 x_train = scaler.transform(x_train)
 x_test = scaler.transform(x_test)
@@ -83,7 +87,8 @@ model = Sequential()
 model.add(Dense(200, input_dim=200, activation='relu'))
 model.add(Dense(400, activation='relu'))
 model.add(Dense(600, activation='relu'))
-model.add(Dense(800, activation='relu'))
+model.add(Dense(400, activation='relu'))
+model.add(Dense(200, activation='relu'))
 model.add(Dense(1, activation='sigmoid'))
 
 #3. 컴파일, 훈련
@@ -91,14 +96,14 @@ model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['acc'])
 es = EarlyStopping(
     monitor='val_loss',
     mode='min',
-    patience=20,
+    patience=70,
     restore_best_weights=True
 )
 start_time = time.time()
 hist = model.fit(
     x_train, y_train,
     epochs=3000,
-    batch_size=32,
+    batch_size=128,
     verbose=1,
     callbacks=[es],
     validation_split=0.25
@@ -153,3 +158,33 @@ submission_csv.to_csv(path + "submit/" + "0908_1642.csv")
 # 1250/1250 ━━━━━━━━━━━━━━━━━━━━ 1s 744us/step
 # acc_score :  0.91275
 # 6250/6250 ━━━━━━━━━━━━━━━━━━━━ 5s 758us/step 
+#
+# StandardScaler
+# Epoch 71/3000
+# 938/938 ━━━━━━━━━━━━━━━━━━━━ 4s 5ms/step - acc: 0.9983 - loss: 0.0056 - val_acc: 0.8916 - val_loss: 1.2330
+# 1250/1250 ━━━━━━━━━━━━━━━━━━━━ 1s 1ms/step - acc: 0.9110 - loss: 0.2417  
+# loss :  [0.2416592240333557, 0.9110000133514404]
+# 걸린 시간 :  312.12 초
+# 1250/1250 ━━━━━━━━━━━━━━━━━━━━ 1s 725us/step
+# acc_score :  0.911
+# 6250/6250 ━━━━━━━━━━━━━━━━━━━━ 5s 730us/step
+#
+# MaxAbsScaler
+# Epoch 80/3000
+# 938/938 ━━━━━━━━━━━━━━━━━━━━ 5s 5ms/step - acc: 0.9775 - loss: 0.0707 - val_acc: 0.8847 - val_loss: 0.7258
+# 1250/1250 ━━━━━━━━━━━━━━━━━━━━ 1s 1ms/step - acc: 0.9115 - loss: 0.2412
+# loss :  [0.2412102222442627, 0.9115250110626221]
+# 걸린 시간 :  353.31 초
+# 1250/1250 ━━━━━━━━━━━━━━━━━━━━ 1s 865us/step
+# acc_score :  0.911525
+# 6250/6250 ━━━━━━━━━━━━━━━━━━━━ 6s 892us/step 
+#
+# RobustScaler
+# Epoch 72/3000
+# 938/938 ━━━━━━━━━━━━━━━━━━━━ 4s 4ms/step - acc: 0.9977 - loss: 0.0064 - val_acc: 0.8845 - val_loss: 1.3126
+# 1250/1250 ━━━━━━━━━━━━━━━━━━━━ 1s 944us/step - acc: 0.9105 - loss: 0.2420
+# loss :  [0.2420067936182022, 0.9105499982833862]
+# 걸린 시간 :  308.49 초
+# 1250/1250 ━━━━━━━━━━━━━━━━━━━━ 1s 741us/step
+# acc_score :  0.91055
+# 6250/6250 ━━━━━━━━━━━━━━━━━━━━ 5s 868us/step 

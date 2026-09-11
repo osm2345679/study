@@ -6,10 +6,11 @@ from tensorflow.keras.layers import Dense
 from tensorflow.keras.callbacks import EarlyStopping
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score, mean_squared_error
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import MinMaxScaler, StandardScaler, MaxAbsScaler, RobustScaler
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import time
 
 #1. 데이터
 path = "./_data/ddarung/"   # 상대경로
@@ -94,21 +95,21 @@ x_train, x_test, y_train, y_test = train_test_split(
     random_state=42
 )
 
-scaler = MinMaxScaler()
+# scaler = MinMaxScaler()
+# scaler = StandardScaler()
+# scaler = MaxAbsScaler()
+scaler = RobustScaler()
+
 scaler.fit(x_train)
 x_train = scaler.transform(x_train)
 x_test = scaler.transform(x_test)
 
 #2. 모델 구성
 model = Sequential()
-model.add(Dense(18, input_dim=9))
-model.add(Dense(18))
-model.add(Dense(18))
-model.add(Dense(18))
-model.add(Dense(18))
-model.add(Dense(18))
-model.add(Dense(18))
-model.add(Dense(18))
+model.add(Dense(180, input_dim=9))
+model.add(Dense(180, activation='relu'))
+model.add(Dense(180, activation='relu'))
+model.add(Dense(180, activation='relu'))
 model.add(Dense(1))
 
 #3. 컴파일, 훈련
@@ -116,10 +117,12 @@ model.compile(loss='mse', optimizer='adam')
 es = EarlyStopping(
     monitor = 'val_loss',
     mode = min,
-    patience = 150,
+    patience = 200,
     restore_best_weights = True
 )
-hist = model.fit(x_train, y_train, epochs=2000, batch_size=32, verbose=1, validation_split=0.25, callbacks=[es])
+start_time = time.time()
+hist = model.fit(x_train, y_train, epochs=190000, batch_size=32, verbose=1, validation_split=0.25, callbacks=[es])
+end_time = time.time()
 
 #4. 평가, 예측
 loss = model.evaluate(x_test, y_test)
@@ -135,6 +138,8 @@ def RMSE(y_test, y_predict) :
 
 rmse = RMSE(y_test, y_predict)
 print("rmse : ", rmse)
+
+print("걸린 시간 : ", round(end_time - start_time, 2), "초")
 
 """
     python-기초
@@ -182,3 +187,33 @@ plt.show()
 # 9/9 ━━━━━━━━━━━━━━━━━━━━ 0s 6ms/step 
 # mse :  2900.0009347711734
 # rmse :  53.8516567504768
+#
+# StandardScaler + Hyper parameter tuning
+# Epoch 346/190000
+# 25/25 ━━━━━━━━━━━━━━━━━━━━ 0s 2ms/step - loss: 218.7084 - val_loss: 2320.2178
+# 9/9 ━━━━━━━━━━━━━━━━━━━━ 0s 2ms/step - loss: 2003.9081 
+# loss :  2003.9080810546875
+# 9/9 ━━━━━━━━━━━━━━━━━━━━ 0s 5ms/step 
+# mse :  2003.9079300046617
+# rmse :  44.76503021337818
+# 걸린 시간 :  39.97 초
+#
+# MaxAbsScaler
+# Epoch 528/190000
+# 25/25 ━━━━━━━━━━━━━━━━━━━━ 0s 2ms/step - loss: 182.1598 - val_loss: 1841.1351
+# 9/9 ━━━━━━━━━━━━━━━━━━━━ 0s 2ms/step - loss: 1783.9213
+# loss :  1783.9212646484375
+# 9/9 ━━━━━━━━━━━━━━━━━━━━ 0s 4ms/step 
+# mse :  1783.921283274397
+# rmse :  42.23649231735984
+# 걸린 시간 :  42.45 초
+#
+# RobustScaler
+# Epoch 324/190000
+# 25/25 ━━━━━━━━━━━━━━━━━━━━ 0s 3ms/step - loss: 133.6066 - val_loss: 2378.2134
+# 9/9 ━━━━━━━━━━━━━━━━━━━━ 0s 2ms/step - loss: 1866.7689 
+# loss :  1866.7689208984375
+# 9/9 ━━━━━━━━━━━━━━━━━━━━ 0s 4ms/step 
+# mse :  1866.7690188074857
+# rmse :  43.20612246901457
+# 걸린 시간 :  26.41 초

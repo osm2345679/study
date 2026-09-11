@@ -5,7 +5,7 @@ from tensorflow.keras.callbacks import EarlyStopping
 from sklearn.model_selection import train_test_split
 from sklearn.datasets import fetch_covtype
 from sklearn.metrics import accuracy_score
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import MinMaxScaler, StandardScaler, MaxAbsScaler, RobustScaler
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
@@ -60,7 +60,11 @@ x_train, x_test, y_train, y_test = train_test_split(
     stratify=y
 )
 
-scaler = MinMaxScaler()
+# scaler = MinMaxScaler()
+# scaler = StandardScaler()
+# scaler = MaxAbsScaler()
+scaler = RobustScaler()
+
 scaler.fit(x_train)
 x_train = scaler.transform(x_train)
 x_test = scaler.transform(x_test)
@@ -127,11 +131,41 @@ plt.show()
 # acc :  0.8427
 #
 # MinMaxScaler
-# Epoch 789/3000
-# 2724/2724 ━━━━━━━━━━━━━━━━━━━━ 3s 997us/step - acc: 0.8799 - loss: 0.2925 - val_acc: 0.8763 - val_loss: 0.3001
-# 3632/3632 ━━━━━━━━━━━━━━━━━━━━ 2s 681us/step - acc: 0.8806 - loss: 0.2949
-# loss :  0.29494690895080566
-# acc :  0.8806
-# 걸린 시간 :  2363 2 초
-# 3632/3632 ━━━━━━━━━━━━━━━━━━━━ 2s 415us/step 
-# acc :  0.8806
+# Epoch 623/3000
+# 2724/2724 ━━━━━━━━━━━━━━━━━━━━ 3s 1ms/step - acc: 0.8817 - loss: 0.2923 - val_acc: 0.8773 - val_loss: 0.3020
+# 3632/3632 ━━━━━━━━━━━━━━━━━━━━ 2s 621us/step - acc: 0.8840 - loss: 0.2928
+# loss :  0.29275277256965637
+# acc :  0.884
+# 걸린 시간 :  1793 2 초
+# 3632/3632 ━━━━━━━━━━━━━━━━━━━━ 2s 431us/step 
+# acc :  0.884
+#
+# StandardScaler
+# Epoch 622/3000
+# 2724/2724 ━━━━━━━━━━━━━━━━━━━━ 3s 1ms/step - acc: 0.8827 - loss: 0.2889 - val_acc: 0.8787 - val_loss: 0.2998
+# 3632/3632 ━━━━━━━━━━━━━━━━━━━━ 3s 850us/step - acc: 0.8828 - loss: 0.2928 
+# loss :  0.2928265631198883
+# acc :  0.8828
+# 걸린 시간 :  2172 2 초
+# 3632/3632 ━━━━━━━━━━━━━━━━━━━━ 2s 563us/step 
+# acc :  0.8828
+#
+# MaxAbsScaler
+# Epoch 738/3000
+# 2724/2724 ━━━━━━━━━━━━━━━━━━━━ 4s 2ms/step - acc: 0.8775 - loss: 0.2978 - val_acc: 0.8744 - val_loss: 0.3060
+# 3632/3632 ━━━━━━━━━━━━━━━━━━━━ 4s 1ms/step - acc: 0.8783 - loss: 0.2979   
+# loss :  0.29791995882987976
+# acc :  0.8783
+# 걸린 시간 :  2206 2 초
+# 3632/3632 ━━━━━━━━━━━━━━━━━━━━ 2s 565us/step 
+# acc :  0.8783
+#
+# RobustScaler
+# Epoch 754/3000
+# 2724/2724 ━━━━━━━━━━━━━━━━━━━━ 3s 964us/step - acc: 0.8882 - loss: 0.2742 - val_acc: 0.8837 - val_loss: 0.2848
+# 3632/3632 ━━━━━━━━━━━━━━━━━━━━ 2s 669us/step - acc: 0.8859 - loss: 0.2805
+# loss :  0.2804836928844452
+# acc :  0.8859
+# 걸린 시간 :  2207 2 초
+# 3632/3632 ━━━━━━━━━━━━━━━━━━━━ 2s 428us/step 
+# acc :  0.8859

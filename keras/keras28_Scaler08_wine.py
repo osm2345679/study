@@ -5,7 +5,7 @@ from tensorflow.keras.callbacks import EarlyStopping
 from sklearn.model_selection import train_test_split
 from sklearn.datasets import load_wine
 from sklearn.metrics import accuracy_score
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import MinMaxScaler, StandardScaler, MaxAbsScaler, RobustScaler
 import pandas as pd
 import numpy as np
 import time
@@ -33,7 +33,11 @@ x_train, x_test, y_train, y_test = train_test_split(
     stratify=y
 )
 
-scaler = MinMaxScaler()
+# scaler = MinMaxScaler()
+# scaler = StandardScaler()
+# scaler = MaxAbsScaler()
+scaler = RobustScaler()
+
 scaler.fit(x_train)
 x_train = scaler.transform(x_train)
 x_test = scaler.transform(x_test)
@@ -98,4 +102,34 @@ print("acc : ", round(acc, 4))
 # acc :  1.0
 # 걸린 시간 :  9.47 초
 # 2/2 ━━━━━━━━━━━━━━━━━━━━ 0s 28ms/step
+# acc :  1.0
+#
+# StandardScaler
+# Epoch 115/3000
+# 14/14 ━━━━━━━━━━━━━━━━━━━━ 0s 4ms/step - acc: 1.0000 - loss: 1.4544e-04 - val_acc: 0.9722 - val_loss: 0.1946
+# 2/2 ━━━━━━━━━━━━━━━━━━━━ 0s 11ms/step - acc: 1.0000 - loss: 0.0536
+# loss :  0.05360769107937813
+# acc :  1.0
+# 걸린 시간 :  8.53 초
+# 2/2 ━━━━━━━━━━━━━━━━━━━━ 0s 30ms/step
+# acc :  1.0
+#
+# MaxAbsScaler
+# Epoch 251/3000
+# 14/14 ━━━━━━━━━━━━━━━━━━━━ 0s 5ms/step - acc: 1.0000 - loss: 0.0021 - val_acc: 0.9722 - val_loss: 0.0343
+# 2/2 ━━━━━━━━━━━━━━━━━━━━ 0s 0s/step - acc: 0.9722 - loss: 0.0797  
+# loss :  0.07973544299602509
+# acc :  0.97
+# 걸린 시간 :  19.35 초
+# 2/2 ━━━━━━━━━━━━━━━━━━━━ 0s 40ms/step
+# acc :  0.9722
+#
+# RobustScaler
+# Epoch 134/3000
+# 14/14 ━━━━━━━━━━━━━━━━━━━━ 0s 4ms/step - acc: 1.0000 - loss: 9.7202e-05 - val_acc: 0.9722 - val_loss: 0.0422
+# 2/2 ━━━━━━━━━━━━━━━━━━━━ 0s 11ms/step - acc: 1.0000 - loss: 0.0331
+# loss :  0.0331292599439621
+# acc :  1.0
+# 걸린 시간 :  9.78 초
+# 2/2 ━━━━━━━━━━━━━━━━━━━━ 0s 29ms/step
 # acc :  1.0
