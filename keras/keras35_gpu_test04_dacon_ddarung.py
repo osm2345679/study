@@ -1,4 +1,4 @@
-# 28-4 카피
+# 34-4 카피
 # 데이터셋 - https://dacon.io/competitions/open/235576/data
 
 from tensorflow.keras.models import Sequential, Model
@@ -9,7 +9,7 @@ from sklearn.metrics import r2_score, mean_squared_error
 from sklearn.preprocessing import MinMaxScaler, StandardScaler, MaxAbsScaler, RobustScaler
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 import datetime
 import time
 
@@ -126,7 +126,7 @@ dense3 = Dense(180, activation='relu')(drop2)
 drop3 = Dropout(0.2)(dense3)
 dense4 = Dense(180, activation='relu')(drop3)
 drop4 = Dropout(0.2)(dense4)
-output1 = Dense(10, activation='relu')(drop4)
+output1 = Dense(1)(drop4)
 
 model = Model(inputs=input1, outputs=output1)
 
@@ -152,7 +152,7 @@ mcp = ModelCheckpoint(
     filepath = filepath
 )
 start_time = time.time()
-hist = model.fit(x_train, y_train, epochs=190000, batch_size=32, verbose=1, validation_split=0.25, callbacks=[es])
+hist = model.fit(x_train, y_train, epochs=100, batch_size=32, verbose=1, validation_split=0.25)
 end_time = time.time()
 
 #4. 평가, 예측
@@ -188,17 +188,17 @@ print("걸린 시간 : ", round(end_time - start_time, 2), "초")
 """
     파라미터 튜닝 시 파라미터값 적어두기. 명세.
 """
-plt.rcParams['font.family'] = 'Malgun Gothic'   # 한글 깨짐 방지
-plt.rcParams['axes.unicode_minus'] = False  # minus 기호 깨짐 방지
-plt.figure(figsize=(9,6))
-plt.plot(hist.history['loss'], c='orange', label='loss')
-plt.plot(hist.history['val_loss'], c='purple', label='val_loss')
-plt.legend(loc='upper right')
-plt.title('따릉이 Loss')
-plt.xlabel('Epochs')
-plt.ylabel('Loss / Val_loss')
-plt.grid()
-plt.show()
+# plt.rcParams['font.family'] = 'Malgun Gothic'   # 한글 깨짐 방지
+# plt.rcParams['axes.unicode_minus'] = False  # minus 기호 깨짐 방지
+# plt.figure(figsize=(9,6))
+# plt.plot(hist.history['loss'], c='orange', label='loss')
+# plt.plot(hist.history['val_loss'], c='purple', label='val_loss')
+# plt.legend(loc='upper right')
+# plt.title('따릉이 Loss')
+# plt.xlabel('Epochs')
+# plt.ylabel('Loss / Val_loss')
+# plt.grid()
+# plt.show()
 
 # Results
 
@@ -248,3 +248,21 @@ plt.show()
 # mse :  1866.7690188074857
 # rmse :  43.20612246901457
 # 걸린 시간 :  26.41 초
+
+# CPU vs GPU
+# Epoch 100/100
+# 25/25 ━━━━━━━━━━━━━━━━━━━━ 0s 3ms/step - loss: 1922.0060 - val_loss: 2000.7965
+# 9/9 ━━━━━━━━━━━━━━━━━━━━ 0s 2ms/step - loss: 2058.3267 
+# loss :  2058.32666015625
+# 9/9 ━━━━━━━━━━━━━━━━━━━━ 0s 5ms/step 
+# mse :  2058.3265454417833
+# rmse :  45.36878382149761
+# 걸린 시간 :  8.61 초
+# Epoch 100/100
+# 25/25 [==============================] - 0s 3ms/step - loss: 1905.8706 - val_loss: 2019.2345
+# 9/9 [==============================] - 0s 2ms/step - loss: 2040.2167
+# loss :  2040.2166748046875
+# 9/9 [==============================] - 0s 2ms/step
+# mse :  2040.216729753287
+# rmse :  45.168758337520046
+# 걸린 시간 :  6.87 초

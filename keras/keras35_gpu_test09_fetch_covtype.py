@@ -1,4 +1,4 @@
-# 33-9카피
+# 34-9카피
 from tensorflow.keras.models import Sequential, Model
 from tensorflow.keras.layers import Dense, Dropout, Input
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
@@ -6,7 +6,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.datasets import fetch_covtype
 from sklearn.metrics import accuracy_score
 from sklearn.preprocessing import MinMaxScaler, StandardScaler, MaxAbsScaler, RobustScaler
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 import time
@@ -71,29 +71,29 @@ x_train = scaler.transform(x_train)
 x_test = scaler.transform(x_test)
 
 #2. 모델 구성
-model = Sequential()
-model.add(Dense(50, input_dim=54))
-model.add(Dropout(0.2))
-model.add(Dense(30, activation='relu'))
-model.add(Dropout(0.2))
-model.add(Dense(30, activation='relu'))
-model.add(Dropout(0.2))
-model.add(Dense(30, activation='relu'))
-model.add(Dropout(0.2))
-model.add(Dense(7, activation='softmax'))
+# model = Sequential()
+# model.add(Dense(50, input_dim=54))
+# model.add(Dropout(0.2))
+# model.add(Dense(30, activation='relu'))
+# model.add(Dropout(0.2))
+# model.add(Dense(30, activation='relu'))
+# model.add(Dropout(0.2))
+# model.add(Dense(30, activation='relu'))
+# model.add(Dropout(0.2))
+# model.add(Dense(7, activation='softmax'))
 
-model.summary()
+# model.summary()
 
 input1 = Input(shape=(54,))
-dense1 = Dense(50)(input1)
+dense1 = Dense(100)(input1)
 drop1 = Dropout(0.2)(dense1)
-dense2 = Dense(30, activation='relu')(drop1)
+dense2 = Dense(50, activation='relu')(drop1)
 drop2 = Dropout(0.2)(dense2)
-dense3 = Dense(30, activation='relu')(drop2)
+dense3 = Dense(50, activation='relu')(drop2)
 drop3 = Dropout(0.2)(dense3)
-dense4 = Dense(30, activation='relu')(drop3)
+dense4 = Dense(50, activation='relu')(drop3)
 drop4 = Dropout(0.2)(dense4)
-output1 = Dense(7, activation='relu')(drop4)
+output1 = Dense(7, activation='softmax')(drop4)
 model = Model(inputs=input1, outputs=output1)
 
 model.summary()
@@ -123,11 +123,10 @@ mcp = ModelCheckpoint(
 start_time = time.time()
 hist = model.fit(
     x_train, y_train,
-    epochs=3000,
-    batch_size=128,
+    epochs=100,
+    batch_size=256,
     verbose=1,
     validation_split=0.25,
-    callbacks=[es]
 )
 end_time = time.time()
 
@@ -145,16 +144,16 @@ y_test = np.argmax(y_test, axis=1)
 acc = accuracy_score(y_test, y_argmax)
 print("acc : ", round(acc, 4))
 
-plt.figure(figsize=(9,6))
-plt.plot(hist.history['loss'], c='blue', label='loss')
-plt.plot(hist.history['val_loss'], c='purple', label='val_loss')
-plt.plot(hist.history['acc'], c='orange', label='acc')
-plt.plot(hist.history['val_acc'], c='red', label='val_acc')
-plt.legend(loc='upper left')
-plt.xlabel('Epochs')
-plt.ylabel('Loss / Val_loss / Acc / Val_acc')
-plt.grid()
-plt.show()
+# plt.figure(figsize=(9,6))
+# plt.plot(hist.history['loss'], c='blue', label='loss')
+# plt.plot(hist.history['val_loss'], c='purple', label='val_loss')
+# plt.plot(hist.history['acc'], c='orange', label='acc')
+# plt.plot(hist.history['val_acc'], c='red', label='val_acc')
+# plt.legend(loc='upper left')
+# plt.xlabel('Epochs')
+# plt.ylabel('Loss / Val_loss / Acc / Val_acc')
+# plt.grid()
+# plt.show()
 
 # Results 
 #
@@ -204,3 +203,21 @@ plt.show()
 # 걸린 시간 :  2207 2 초
 # 3632/3632 ━━━━━━━━━━━━━━━━━━━━ 2s 428us/step 
 # acc :  0.8859
+#
+# CPU vs GPU
+# Epoch 100/100
+# 2724/2724 ━━━━━━━━━━━━━━━━━━━━ 4s 1ms/step - acc: 0.3647 - loss: nan - val_acc: 0.3644 - val_loss: nan
+# 3632/3632 ━━━━━━━━━━━━━━━━━━━━ 2s 611us/step - acc: 0.3646 - loss: nan
+# loss :  nan
+# acc :  0.3646
+# 걸린 시간 :  402 2 초
+# 3632/3632 ━━━━━━━━━━━━━━━━━━━━ 1s 354us/step 
+# acc :  0.3646
+# Epoch 100/100
+# 2724/2724 [==============================] - 8s 3ms/step - loss: nan - acc: 0.3647 - val_loss: nan - val_acc: 0.3644
+# 3632/3632 [==============================] - 16s 5ms/step - loss: nan - acc: 0.3646
+# loss :  nan
+# acc :  0.3646
+# 걸린 시간 :  574 2 초
+# 3632/3632 [==============================] - 2s 637us/step
+# acc :  0.3646

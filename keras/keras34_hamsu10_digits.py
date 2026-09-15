@@ -74,7 +74,7 @@ dense6 = Dense(256, activation='relu')(drop5)
 drop6 = Dropout(0.2)(dense6)
 dense7 = Dense(256, activation='relu')(drop6)
 drop7 = Dropout(0.2)(dense7)
-output1 = Dense(10, activation='relu')(drop7)
+output1 = Dense(10, activation='softmax')(drop7)
 
 model = Model(inputs=input1, outputs=output1)
 

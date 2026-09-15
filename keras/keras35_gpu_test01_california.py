@@ -1,4 +1,4 @@
-# 33-1 카피
+# 34-1 카피
 
 from sklearn.datasets import fetch_california_housing
 from tensorflow.keras.models import Sequential, load_model, Model
@@ -6,7 +6,7 @@ from tensorflow.keras.layers import Dense, Dropout, Input
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 from sklearn.model_selection import train_test_split
 import numpy as np
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 import time
 
 path = './_save/keras30/'
@@ -50,13 +50,13 @@ print(np.min(x_test), np.max(x_test))
 # model.add(Dense(1))
 
 input1 = Input(shape=(8,))
-dense1 = Dense(20)(input1)
+dense1 = Dense(50)(input1)
 drop1 = Dropout(0.2)(dense1)
-dense2 = Dense(20, activation='relu')(drop1)
+dense2 = Dense(50, activation='relu')(drop1)
 drop2 = Dropout(0.3)(dense2)
-dense3 = Dense(20, activation='relu')(drop2)
+dense3 = Dense(50, activation='relu')(drop2)
 drop3 = Dropout(0.5)(dense3)
-dense4 = Dense(20, activation='relu')(drop3)
+dense4 = Dense(50, activation='relu')(drop3)
 output1 = Dense(1)(dense4)
 model = Model(inputs=input1, outputs=output1)
 
@@ -70,7 +70,7 @@ model.compile(loss='mse', optimizer='adam')
 es = EarlyStopping(
     monitor='val_loss',
     mode = 'min',
-    patience = 20,    # 임계값
+    patience = 50,    # 임계값
     restore_best_weights = True,  # 디폴트는 False. False면 스탑 됐을 때의 가중치를 반환.,
     verbose=1
 )
@@ -86,7 +86,7 @@ mcp = ModelCheckpoint(
 
 start_time = time.time()
 hist = model.fit(x_train, y_train,
-                 epochs=5000, batch_size=16, verbose=1, validation_split=0.25, callbacks=[es])
+                 epochs=100, batch_size=32, verbose=1, validation_split=0.25)
 
 # Epoch 1: val_loss improved from None to 0.91376, saving model to ./_save/keras30/keras30_mcp1.keras
 # Epoch 1: finished saving model to ./_save/keras30/keras30_mcp1.keras
@@ -103,7 +103,7 @@ end_time = time.time()
 loss = model.evaluate(x_test, y_test)
 print("loss : ", loss)
 
-# print("걸린 시간 : ", round(end_time - start_time, 2), "초")
+print("걸린 시간 : ", round(end_time - start_time, 2), "초")
 
 # plt.rcParams['font.family'] = 'Malgun Gothic'   # 한글 깨짐 방지
 # plt.rcParams['axes.unicode_minus'] = False  # minus 기호 깨짐 방지
@@ -150,3 +150,23 @@ print("loss : ", loss)
 # 129/129 ━━━━━━━━━━━━━━━━━━━━ 0s 701us/step - loss: 0.3039
 # loss :  0.3039208650588989
 # 걸린 시간 :  218.39 초
+
+# RobustScaler + fine-tuning
+# Epoch 268/5000
+# 387/387 ━━━━━━━━━━━━━━━━━━━━ 0s 923us/step - loss: 0.3168 - val_loss: 0.3516
+# Epoch 268: early stopping
+# Restoring model weights from the end of the best epoch: 218.
+# 129/129 ━━━━━━━━━━━━━━━━━━━━ 0s 583us/step - loss: 0.3024
+# loss :  0.302372276782989
+
+# CPU vs GPU
+# Epoch 100/100
+# 387/387 ━━━━━━━━━━━━━━━━━━━━ 0s 883us/step - loss: 0.3513 - val_loss: 0.4642
+# 129/129 ━━━━━━━━━━━━━━━━━━━━ 0s 512us/step - loss: 0.3455
+# loss :  0.3454844355583191
+# 걸린 시간 :  39.56 초
+# Epoch 100/100
+# 387/387 [==============================] - 1s 1ms/step - loss: 0.3370 - val_loss: 0.3412
+# 129/129 [==============================] - 0s 762us/step - loss: 0.3218
+# loss :  0.321781188249588
+# 걸린 시간 :  58.99 초
