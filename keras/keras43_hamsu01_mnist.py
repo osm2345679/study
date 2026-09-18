@@ -1,0 +1,96 @@
+# 39-1 카피
+from tensorflow.keras.models import Sequential, Model
+from tensorflow.keras.layers import Dense, Conv2D, Dropout, Flatten, MaxPooling2D, Input, GlobalAveragePooling2D
+from tensorflow.keras.datasets import mnist
+from tensorflow.keras.callbacks import EarlyStopping
+from sklearn.metrics import accuracy_score
+from sklearn.preprocessing import OneHotEncoder
+import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
+import time
+
+
+#1. 데이터
+(x_train, y_train), (x_test, y_test) = mnist.load_data()
+
+# scaling
+x_train = x_train/255
+x_test = x_test/255
+
+# one-hot encoding
+ohe = OneHotEncoder(sparse_output=False)
+y_train = ohe.fit_transform(y_train.reshape(-1,1))
+y_test = ohe.fit_transform(y_test.reshape(-1,1))
+
+#2. 모델 구성
+# model = Sequential()
+# model.add(Conv2D(64, (5,5), input_shape=(28, 28, 1)))   # (24, 24, 64). input_shape에서 행 무시-열 우선. (60000,28,28,1) -> (28,28,1)
+# model.add(Conv2D(filters=64, kernel_size=(5,5), activation='relu')) # (20,20,64). 파라미터 이름도 적어봄
+# model.add(Dropout(0.2))
+# model.add(MaxPooling2D())   # (10,10,64)
+# model.add(Conv2D(32, (3,3), activation='relu')) # (8,8,32)
+# model.add(Dropout(0.2))
+# model.add(Flatten())    # 
+# # 4차원 데이터(N,20,20,16)을 2차원 데이터(N,6400)로 변환
+# model.add(Dense(10, activation='softmax'))  # (10,)
+
+input1 = Input(shape=(28,28,1))
+conv1 = Conv2D(64, (5,5))(input1)
+drop1 = Dropout(0.2)(conv1)
+pool1 = MaxPooling2D()(drop1)
+conv1 = Conv2D(32, (3,3), activation='relu')(pool1)
+drop2 = Dropout(0.2)(conv1)
+gap1 = GlobalAveragePooling2D()(drop2)
+output1 = Dense(10, activation='softmax')(gap1)
+model = Model(inputs=input1, outputs=output1)
+model.summary()
+
+#3. 컴파일, 훈련
+es = EarlyStopping(
+    monitor='val_loss',
+    mode='min',
+    patience=40,
+    restore_best_weights=True
+)
+model.compile(
+    loss='categorical_crossentropy',
+    optimizer='adam',
+    metrics=['acc'])
+start_time = time.time()
+model.fit(
+    x_train, y_train,
+    epochs=2000,
+    batch_size=128,
+    verbose=1,
+    validation_split=0.2,
+    callbacks=[es]
+)
+end_time = time.time()
+
+#4. 평가, 예측
+print("=========model.evaluate==========")
+loss = model.evaluate(x_test, y_test, verbose=1)
+print("loss : ", loss[0])
+print("acc : ", loss[1])
+
+y_pred = model.predict(x_test)
+
+y_pred = np.argmax(y_pred, axis=1)
+y_test = np.argmax(y_test, axis=1)
+
+acc = accuracy_score(y_test, y_pred)
+
+print("accuracy_score : ", acc)
+print("걸린 시간 : ", round(end_time-start_time, 2), "초")
+
+# Results
+# Epoch 212/2000
+# 375/375 [==============================] - 1s 3ms/step - loss: 0.0466 - acc: 0.9852 - val_loss: 0.0711 - val_acc: 0.9790
+# =========model.evaluate==========
+# 313/313 [==============================] - 0s 1ms/step - loss: 0.0617 - acc: 0.9804
+# loss :  0.06172037869691849
+# acc :  0.980400025844574
+# 313/313 [==============================] - 0s 800us/step
+# accuracy_score :  0.9804
+# 걸린 시간 :  244.25 초
