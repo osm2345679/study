@@ -19,3 +19,7 @@ model.summary()
 #  Total params: 305 (1.19 KB)
 #  Trainable params: 305 (1.19 KB)
 #  Non-trainable params: 0 (0.00 B)
+
+# 파라미터 계산
+# input_channel x kernel_size x channel + channel
+# 위와 같은데 다른 식으로 표현하면 (kernel_height x kernel_width x input_channel + 1) x output_channel

@@ -7,7 +7,7 @@ import numpy as np
 #2. 모델 구성
 model = Sequential()
 model.add(Conv2D(10, (2,2), input_shape=(10,10,1),  # (10,10,10)
-                 strides=2,
+                 strides=1,
                  padding='same'
 ))
 model.add(Conv2D(filters=9, kernel_size=(3,3),  # (8,8,9)

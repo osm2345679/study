@@ -1,6 +1,7 @@
+# 39-4 카피
 from tensorflow.keras.datasets import cifar100
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Dropout, Conv2D, Flatten
+from tensorflow.keras.layers import Dense, Dropout, Conv2D, MaxPooling2D, GlobalAveragePooling2D
 from tensorflow.keras.callbacks import EarlyStopping
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.metrics import accuracy_score
@@ -15,8 +16,8 @@ import time
 print(x_train.shape, x_test.shape)  # (50000, 32, 32, 3) (10000, 32, 32, 3)
 print(y_train.shape, y_test.shape)  # (50000, 1) (10000, 1)
 
-plt.imshow(x_train[0])
-plt.show()
+# plt.imshow(x_train[0])
+# plt.show()
 
 # scale
 x_train = x_train/255
@@ -48,30 +49,30 @@ y_test = ohe.fit_transform(y_test.reshape(-1,1))
 
 print(y_train.shape, y_test.shape)  # (50000, 100) (10000, 100)
 
+x_train = x_train.reshape(-1, 32*32*3)
+x_test= x_test.reshape(-1, 32*32*3)
+
 #2. 모델 구성
 model = Sequential()
-model.add(Conv2D(64, (3,3), input_shape=(32,32,3)))
-model.add(Conv2D(64, (3,3), activation='relu'))
+model.add(Dense(128, input_shape=(32*32*3,)))
+model.add(Dense(64, activation='relu'))
 model.add(Dropout(0.2))
-model.add(Conv2D(64, (3,3), activation='relu'))
-model.add(Dropout(0.2))
-model.add(Conv2D(64, (3,3), activation='relu'))
-model.add(Dropout(0.2))
-model.add(Conv2D(32, (3,3), activation='relu'))
-model.add(Dropout(0.2))
-model.add(Conv2D(32, (3,3), activation='relu'))
-model.add(Dropout(0.2))
-model.add(Conv2D(32, (3,3), activation='relu'))
-model.add(Dropout(0.2))
-model.add(Conv2D(16, (3,3), activation='relu'))
-model.add(Dropout(0.2))
-model.add(Conv2D(16, (3,3), activation='relu'))
-model.add(Dropout(0.2))
-model.add(Flatten())
 model.add(Dense(32, activation='relu'))
 model.add(Dropout(0.2))
-model.add(Dense(16, activation='relu'))
 model.add(Dense(100, activation='softmax'))
+
+# model.add(Conv2D(64, (3,3), input_shape=(32,32,3))) # 30,30,64
+# model.add(Conv2D(64, (3,3), activation='relu')) # 28,28,64
+# model.add(Dropout(0.2))
+# model.add(MaxPooling2D())   # 14,14,64
+# model.add(Conv2D(64, (3,3), activation='relu')) # 12,12,64
+# model.add(Dropout(0.2))
+# model.add(Conv2D(32, (3,3), activation='relu')) # 10,10,32
+# model.add(Dropout(0.2))
+# model.add(Conv2D(100, (3,3), activation='relu')) # 8,8,16
+# model.add(Dropout(0.2))
+# model.add(GlobalAveragePooling2D())
+# model.add(Dense(100, activation='softmax'))
 
 #3. 컴파일, 훈련
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['acc'])
@@ -85,7 +86,7 @@ start_time = time.time()
 hist = model.fit(
     x_train, y_train,
     epochs=2000,
-    batch_size=256,
+    batch_size=128,
     verbose=1,
     validation_split=0.2,
     callbacks=[es]
@@ -106,13 +107,25 @@ acc = accuracy_score(y_test, y_pred)
 print("acc : ", acc)
 print("걸린 시간 : ", round(end_time-start_time, 2), "초")
 
+plt.figure(figsize=(9,6))
+plt.plot(hist.history['loss'], c='green', label='loss')
+plt.plot(hist.history['val_loss'], c='purple', label='val_loss')
+plt.plot(hist.history['acc'], c='blue', label='accuracy')
+plt.plot(hist.history['val_acc'], c='red', label='val_accuracy')
+plt.legend(loc='upper right')
+plt.title('cifar100 loss, acc')
+plt.xlabel('Epochs')
+plt.ylabel('Loss / Val_loss / Acc / Val_acc')
+plt.grid()
+plt.show()
+
 # Results
 
-# Epoch 289/2000
-# 157/157 [==============================] - 7s 45ms/step - loss: 2.4042 - acc: 0.3455 - val_loss: 2.7588 - val_acc: 0.3183
-# 313/313 [==============================] - 1s 2ms/step - loss: 2.6101 - acc: 0.3310
-# loss :  2.610139846801758
-# acc :  0.3310000002384186
-# 313/313 [==============================] - 1s 2ms/step
-# acc :  0.331
-# 걸린 시간 :  2180.7 초
+# Epoch 114/2000
+# 157/157 [==============================] - 0s 3ms/step - loss: 2.7478 - acc: 0.2955 - val_loss: 3.3228 - val_acc: 0.2282
+# 313/313 [==============================] - 0s 1ms/step - loss: 3.2991 - acc: 0.2300
+# loss :  3.299095630645752
+# acc :  0.23000000417232513
+# 313/313 [==============================] - 0s 709us/step
+# acc :  0.23
+# 걸린 시간 :  56.65 초
