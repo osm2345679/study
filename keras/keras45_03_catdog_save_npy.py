@@ -50,11 +50,11 @@ xy_test = test_datagen.flow_from_directory(
     shuffle=False
     # shuffle=True  # test에서는 불필요. 안 건드는 게 맞음.
 )
-# Found 120 images belonging to 2 classes.
+# Found 120 images belonging  2 classes.
 
 # print(xy_train) # <keras.preprocessing.image.DirectoryIterator object at 0x000001BEFB287FA0>
 # print(xy_train.next())  # 첫번째 보여짐
-# print(xy_train.next())  # 그 다음(두번째) 보여짐
+# print(xy_train.next())  to# 그 다음(두번째) 보여짐
 
 # print(xy_train[0][0])   # 첫번째 배치의 x 데이터
 # print(xy_train[0][1])   # 첫번째 배치의 y 데이터

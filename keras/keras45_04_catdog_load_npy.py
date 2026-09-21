@@ -11,26 +11,6 @@ import datetime
 import time
 
 #1. 데이터
-
-# 증명사진으로 예측해보기
-image_datagen = ImageDataGenerator(
-    rescale=1./255,   # . 표시 : 형변환 표시 안해도 되는데 해주는 편이 형변환했음을 보기 쉬움
-)
-path_image = 'C:/Users/Admin/Downloads/'
-
-image = image_datagen.flow_from_directory(
-    path_image, # 경로
-    target_size=(100,100),
-    batch_size=1,
-    class_mode='binary', # 이진분류
-    color_mode='rgb',  # 흑백
-    shuffle=True
-)
-print(image[0][0])
-print(type(image[0][0]))
-print(image[0][0].shape)
-id_image = image[0][0]
-
 # train_datagen = ImageDataGenerator(
 #     rescale=1./255,   # . 표시 : 형변환 표시 안해도 되는데 해주는 편이 형변환했음을 보기 쉬움
 
@@ -188,11 +168,6 @@ acc = accuracy_score(y_test, np.round(y_pred))
 print("acc : ", acc)
 
 print("걸린 시간 : ", round(end_time-start_time, 2), "초")
-
-id_pred = model.predict(id_image)
-acc = accuracy_score(y_test, np.round(id_pred))
-print("사진 예측 결과 : ", id_pred)
-print("acc : ", acc)
 
 # Results
 # Epoch 118/3000
