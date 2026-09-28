@@ -45,17 +45,20 @@ model.summary()
 # _________________________________________________________________
 #  Layer (type)                Output Shape              Param #   
 # =================================================================
-#  simple_rnn (SimpleRNN)      (None, 5)                 35        
+#  simple_rnn (SimpleRNN)      (None, 3)                 15        
                                                                  
-#  dense (Dense)               (None, 7)                 42        
+#  dense (Dense)               (None, 7)                 28        
                                                                  
 #  dense_1 (Dense)             (None, 1)                 8         
                                                                  
 # =================================================================
-# Total params: 85
-# Trainable params: 85
+# Total params: 51
+# Trainable params: 51
 # Non-trainable params: 0
 # _________________________________________________________________
 
+# Non-trainable params는 전이학습과 같이 가중치 가져오고 freeze할 때 중요
+
 ###### 파라미터 계산 ######
 # 파라미터의 개수 = units*features + unites*bias + units*units
+# 

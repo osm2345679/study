@@ -60,9 +60,9 @@ mcp = ModelCheckpoint(
     filepath = filepath
 )
 
-learning_rate = 0.01
+# learning_rate = 0.01
 # learning_rate = 0.001 # adam은 디폴트 0.001
-# learning_rate = 0.0001
+learning_rate = 0.0001
 # learning_rate = 0.005
 # learning_rate = 0.05
 # learning_rate = 0.009
@@ -101,14 +101,14 @@ print("걸린 시간 : ", round(end_time-start_time, 2), "초")
 # 걸린 시간 :  1722.89 초
 
 # learning_rate = 0.01
-# Epoch 86/2000
-# 11/11 [==============================] - 0s 4ms/step - loss: 0.0105 - acc: 0.9941 - val_loss: 0.1655 - val_acc: 0.9912
-# 4/4 [==============================] - 0s 1ms/step - loss: 0.8299 - acc: 0.9649
-# loss :  0.8299
-# acc :  0.9649
-# 4/4 [==============================] - 0s 664us/step
-# 걸린 시간 :  5.38 초
-# acc_score : 0.9649122807017544
+# Epoch 59/3000
+# 544/544 [==============================] - 17s 31ms/step - loss: 0.6471 - acc: 0.6512 - val_loss: 0.6503 - val_acc: 0.6455
+# 170/170 [==============================] - 2s 9ms/step - loss: 0.6454 - acc: 0.6535
+# loss :  0.6454188227653503
+# acc :  0.6534780859947205
+# 170/170 [==============================] - 1s 8ms/step
+# acc :  0.6534781008465219
+# 걸린 시간 :  962.4 초
 
 # learning_rate = 0.0001
 # Epoch 477/2000
