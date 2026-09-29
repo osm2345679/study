@@ -20,7 +20,7 @@ print(arr)  # [[[ 87.  97.  96.] ... [222. 222. 222.]]]
 print(arr.shape)    # (100, 100, 3)
 print(type(arr))    # <class 'numpy.ndarray'>
 
-arr = np.expand_dims(arr, axis=0)   # 차원 증가
+arr = np.expand_dims(arr, axis=0)   # (1, 100, 100, 3). 차원 증가
 print(arr.shape)
 
 arr /= 255

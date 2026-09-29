@@ -55,10 +55,12 @@ print(x)
 '''
 
 x = bbb.T[0:4].T
+# x = bbb[:,:-1] # 위와 동일 결과
 y = bbb.T[4]
+# y = bbb[:,-1]   # 위와 동일 결과
 print(x, y)
 print(x.shape, y.shape) # (6, 4) (6,)
-
+# exit()
 #2. 모델 구성
 model = Sequential()
 model.add(SimpleRNN(units=200, input_shape=(4,1)))  # x.shape가 (6,4,1)인 데이터이므로. input_shape : (6,4,1) -> (4,1)

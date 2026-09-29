@@ -58,11 +58,9 @@ bbb = split_x(a, 5)
 print(bbb)
 print(bbb.shape)    # (6, 5, 2)
 
-# split
 x = bbb[:, :-1]
 # x = bbb[:, :-1, :] # 위는 여기서 끝 생략한 것
 
-# 얘는 split 아님. 그냥 숫자 대신 -1 사용
 y = bbb[:, -1, 1]
 # y = bbb[:, -1, -1]    # 1은 feature가 2라는 걸 알 때. 모르면 -1.
 
@@ -90,7 +88,7 @@ path = './_save/keras56/'
 date = datetime.datetime.now()
 date = date.strftime("%m%d_%H%M")
 filename = '{epoch:04d}-{val_loss:.4f}.keras'
-filepath = "".join([path, "k56_1_", date, "-", filename])
+filepath = "".join([path, "k56_2_", date, "-", filename])
 
 mcp = ModelCheckpoint(
     monitor = 'val_loss',
