@@ -1,7 +1,8 @@
+# 58-1 카피
 # 데이터셋 - https://www.kaggle.com/datasets/stytch16/jena-climate-2009-2016/data
 
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, LSTM, SimpleRNN, GRU, Dropout, Flatten
+from tensorflow.keras.layers import Dense, LSTM, SimpleRNN, GRU, Dropout, Flatten, Bidirectional
 from tensorflow.keras.callbacks import ModelCheckpoint, EarlyStopping, ReduceLROnPlateau
 from tensorflow.keras.optimizers import Adam
 from sklearn.model_selection import train_test_split
@@ -38,6 +39,37 @@ dataset = pd.read_csv(path + 'jena_climate_2009_2016.csv', index_col=0)
 # 01.01.2009 00:20:00    996.57     -8.41    265.01        -9.28    93.4          3.23          3.02          0.21       1.89             3.03       1309.80      0.72           1.50     136.1
 # 01.01.2009 00:30:00    996.53     -8.51    264.91        -9.31    93.9          3.21          3.01          0.20       1.88             3.02       1310.24      0.19           0.63     171.6
 
+'''
+보다 깔끔한 코드 찾고 살짝 수정해서 정리함
+찾아보니 경우에 따라 .columns보단 .iloc[]가 깔끔할듯
+찾아보니 pandas에서도 iloc, loc는 다차원 슬라이싱 가능하다고 함.
+ㄴ 자체 객체의 __getitem__을 오버라이드 했다고 함
+ㄴ iloc : Integer location
+
+1안 - x-y 순서대로
+x = dataset[:-2*size].drop(dataset.columns[1], axis=1)
+print(x.shape)  # (420263, 13)
+
+pred_dataset = dataset[-size:].drop(dataset.columns[1], axis=1)
+print(pred_dataset.shape)   # (144, 13)
+
+y = dataset[size:-size][dataset.columns[1]]
+print(y.shape)  # (420263,)
+
+
+2안 - drop 하고 x 자름
+y = dataset[size:-size][dataset.columns[1]]
+print(y.shape)  # (420263,)
+
+dataset = dataset.drop(dataset.columns[1], axis=1)  # drop y
+
+x = dataset[:-2*size]
+print(x.shape)  # (420263, 13)
+
+pred_dataset = dataset[-size:]
+print(pred_dataset.shape)   # (144, 13)
+
+'''
 
 # Split pred data and y
 arr_dataset = np.array(dataset)
@@ -49,10 +81,10 @@ dataset = dataset.drop(['T (degC)'], axis=1)  # drop y
 
 arr_dataset = np.array(dataset)
 pred_dataset = arr_dataset[-size:]
-print(pred_dataset.shape)   # (144, 13)
+# print(pred_dataset.shape)   # (144, 13)
 
 arr_dataset = arr_dataset[:-size]
-print(arr_dataset.shape)    # (420407, 13)
+# print(arr_dataset.shape)    # (420407, 13)
 
 # Split for time series data
 def split_x(dataset, size):
@@ -123,7 +155,7 @@ x_test = x_test.reshape(-1, 144, 13)
 # model.add(Dense(144))
 
 model = Sequential()
-model.add(LSTM(units=100, input_shape=(144, 13), dropout=0.2))    # (N, 144, 13) -> (144, 13)
+model.add(Bidirectional(LSTM(units=100), input_shape=(144, 13)))    # (N, 144, 13) -> (144, 13)
 model.add(Dense(200, activation='relu'))
 model.add(Dense(200, activation='relu'))
 model.add(Dense(200, activation='relu'))
@@ -137,11 +169,11 @@ es = EarlyStopping(
     verbose=1,
     restore_best_weights=True
 )
-filepath = './_save/keras58/'
+filepath = './_save/keras59/'
 date = datetime.datetime.now()
 date = date.strftime("%m%d_%H%M")
 filename = '{epoch:04d}-{val_loss:.4f}.keras'
-filepath = "".join([filepath, "k58_1_", date, "-", filename])
+filepath = "".join([filepath, "k59_1_", date, "-", filename])
 
 mcp = ModelCheckpoint(
     monitor = 'val_loss',
@@ -233,3 +265,29 @@ pd_pred.to_csv(path + "submit/" + "submit_" + date + ".csv")
 # rmse :  1.0332949049975935
 # 1/1 [==============================] - 0s 8ms/step
 # 걸린 시간 :  276.67 초
+
+# Dropout + Bidirectional
+# Epoch 18: ReduceLROnPlateau reducing learning rate to 0.004999999888241291.
+# 493/493 [==============================] - 13s 27ms/step - loss: 1.5112 - val_loss: 2.9754 - lr: 0.0100
+# Epoch 18: early stopping
+# 2026-09-30 16:54:23.555268: W tensorflow/core/framework/cpu_allocator_impl.cc:82] Allocation of 2516686848 exceeds 10% of free system memory.
+# 10503/10503 [==============================] - 67s 6ms/step - loss: 2.6004
+# loss :  2.6004228591918945
+# 2626/2626 [==============================] - 16s 6ms/step
+# r2 :  0.9624740417009323
+# mse :  2.649262271772393
+# rmse :  1.6276554524138065
+# 1/1 [==============================] - 0s 14ms/step
+# 걸린 시간 :  246.28 초
+
+# Bidirectional
+# Epoch 43: early stopping
+# 2026-09-30 17:31:56.264978: W tensorflow/core/framework/cpu_allocator_impl.cc:82] Allocation of 2516686848 exceeds 10% of free system memory.
+# 10503/10503 [==============================] - 70s 7ms/step - loss: 0.6933
+# loss :  0.6933417320251465
+# 2626/2626 [==============================] - 17s 6ms/step
+# r2 :  0.9896972474299316
+# mse :  0.727304727505039
+# rmse :  0.8528216270153092
+# 1/1 [==============================] - 0s 17ms/step
+# 걸린 시간 :  588.13 초
