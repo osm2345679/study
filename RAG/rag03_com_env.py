@@ -1,4 +1,5 @@
 # 02 카피
+# pc 환경변수 설정에서 {"OPENAI_API_KEY", "api_key"}로 추가한 것
 from langchain_openai import ChatOpenAI
 import os
 # os.environ["OPENAI_API_KEY"] = 'api_key'

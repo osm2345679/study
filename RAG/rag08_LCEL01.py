@@ -8,6 +8,7 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
+# vscode에서는 한 번 입력하면 알아서 계속 주입하거나 알아서 .env 파일 열어서 주입해주지만 ide 아니면 적용 안 되므로 꼭 적어줄 것.
 
 # 06에서 카피함
 api_key = os.environ["MONOROUTER_API_KEY"].strip()   # strip은 공백이나 줄바꿈 등 제거해주는 메서드
