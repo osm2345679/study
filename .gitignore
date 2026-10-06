@@ -3,6 +3,7 @@ _data/
 
 # 커밋 불필요해서 제외
 _save/
+_db/
 
 # api key 보관
 .env
