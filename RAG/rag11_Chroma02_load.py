@@ -11,12 +11,6 @@ load_dotenv()
 api_key = os.environ["MONOROUTER_API_KEY"].strip()
 base_url = "https://monogpt.kr/api/monorouter/v1"
 
-# 할 일
-# 1. 데이터를 불러온다
-# 2. 데이터를 자른다/청킹한다
-# 3. 데이터를 벡터화한다
-# 4. 데이터를 벡터 DB에 저장한다
-
 embeddings = OpenAIEmbeddings(
     model = 'text-embedding-3-small',
     api_key=api_key,
