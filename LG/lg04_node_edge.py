@@ -1,4 +1,4 @@
-# 04 카피
+# 03 카피
 from langchain_openai import ChatOpenAI
 import os
 
@@ -49,7 +49,7 @@ graph_01.add_node("prepare", prepare)
 graph_01.add_node("chatbot", chatbot)
 graph_01.add_node("finish", finish)
 
-#4. 엣지 추가
+#4. edge 추가
 graph_01.add_edge(START, "prepare")
 graph_01.add_edge("prepare", "chatbot")
 graph_01.add_edge("chatbot", "finish")
