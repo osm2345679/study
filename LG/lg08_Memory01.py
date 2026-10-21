@@ -1,5 +1,5 @@
 # tool calling : 외부 기능을 가져와서 사용!!!
-# 04 카피
+# 7-2 카피
 from langchain_openai import ChatOpenAI
 import os
 
@@ -84,25 +84,29 @@ graph_builder.add_edge("tools", "chatbot")
 graph = graph_builder.compile()
 
 #6. 실행
-query = "삼성전자의 오늘 주가를 알려줘"
+# query = "삼성전자의 오늘 주가를 알려줘"
 
+# response = graph.invoke({
+#     "messages" : [("user", query)]
+# })
+
+# print("AI : ", response["messages"][-1].content)
+
+# 첫번째 질문
 response = graph.invoke({
-    "messages" : [("user", query)]
+    "messages" : [("user", "내 이름은 홍길동이야.")]
 })
 
-print("AI : ", response["messages"][-1].content)
+print(response["messages"][-1].content)
 
-#################################################
-# 그래프 이미지 저장
-#################################################
-path = './_save/image/'
+print("================ 두 번째 질문 ================")
+# 두번째 질문
+response = graph.invoke({
+    "messages" : [("user", "내 이름이 뭐라고 했지?")]
+})
+print(response["messages"][-1].content)
 
-png_data = graph.get_graph().draw_mermaid_png()
-
-with open(path + "lg07_ToolNode.png", 'wb') as file:
-    file.write(png_data)
-
-# with는 close와 함께. 그냥 아래와 같음.
-# file = open(path + "lg07_ToolNode.png", 'wb')
-# file.write(png_data)
-# file.close()
+# Results
+# 안녕하세요, 홍길동님! 무엇을 도와드릴까요?
+# ================ 두 번째 질문 ================
+# 아직 이름을 말씀해 주신 적이 없어요. 알려주시면 기억해 둘게요.
