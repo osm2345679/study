@@ -47,7 +47,7 @@ from typing import Annotated, TypedDict
 from langgraph.graph import StateGraph, START, END
 from langgraph.graph.message import add_messages
 from langgraph.prebuilt import ToolNode, tools_condition
-# 메모리 추가 ㄱ
+# 메모리 추가 1
 from langgraph.checkpoint.memory import InMemorySaver
 
 #1. state 정의
@@ -83,12 +83,12 @@ graph_builder.add_conditional_edges(
 graph_builder.add_edge("tools", "chatbot")
 
 #5. 컴파일
-# 메모리 추가 ㄴ
+# 메모리 추가 2
 memory = InMemorySaver()
 graph = graph_builder.compile(checkpointer=memory)
 
 #6. 실행
-# 메모리 추가 ㄷ
+# 메모리 추가 3
 config = {"configurable" : {"thread_id" : "usesr01"}}
 
 # 첫번째 질문

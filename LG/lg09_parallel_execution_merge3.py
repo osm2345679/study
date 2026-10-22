@@ -1,5 +1,5 @@
 # tool calling : 외부 기능을 가져와서 사용!!!
-# 8-2 카피
+# 9-2 카피
 from langchain_openai import ChatOpenAI
 import os
 
@@ -12,7 +12,7 @@ base_url = "https://monogpt.kr/api/monorouter/v1"
 llm = ChatOpenAI(
     model_name='gpt-5.6-terra',
     temperature=0,
-    max_tokens=1000,
+    max_tokens=4000,
     api_key=api_key,
     base_url=base_url
 )
@@ -72,13 +72,32 @@ def analysis_agent(state: State):
     )
     return {"analysis_result" : response.content}
 
-def merge_agent(state: State):
-    result = (
-        state["search_result"] + "\n\n" +
-        "================================" + "\n" +
-        state["analysis_result"]
-    )
-    return {"messages" : [("assistant", result)]}
+def merge_agent(state: State):  # 결과 통합 에이전트!
+    # result = (
+    #     state["search_result"] + "\n\n" +
+    #     "================================" + "\n" +
+    #     state["analysis_result"]
+    # )
+    # return {"messages" : [("assistant", result)]}
+
+    print("결과 통합 에이전트 실행")
+
+    prompt = f'''
+    다음 두 결과를 종합하여 최종 답변을 작성해줘.
+
+    [웹 검색 결과]
+    {state["search_result"]}
+
+    [AI 분석 결과]
+    {state["analysis_result"]}
+
+    검색 결과를 우선적으로 참고하고,
+    최신 정보와 기존 분석을 구분해서 설명해줘.
+    '''
+
+    response = llm.invoke(prompt)
+
+    return {"messages" : [response]}
 
 #3. graph 구성
 builder = StateGraph(State)

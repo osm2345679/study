@@ -58,6 +58,6 @@ response = graph.invoke({
 # print(response)
 # print(response["messages"][0])
 # print(response["messages"][1])
-print(response["messages"][1].content)
+print(response["messages"][-1].content)
 print(response["messages"][0].type) # human
 print(response["messages"][1].type) # ai
