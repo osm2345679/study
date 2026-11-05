@@ -40,80 +40,30 @@ for name, model in all:
         print(name, "의 r2 :", r2)
     except:
         print(name, "모델 오류")
-        
+
 # Results
-# AdaBoostClassifier 의 train acc : [0.95833333 0.83333333 0.91666667 0.95833333 0.91666667]
-# AdaBoostClassifier 의 acc : 0.9333333333333333
-# BaggingClassifier 의 train acc : [0.91666667 0.875      0.91666667 0.95833333 0.91666667]
-# BaggingClassifier 의 acc : 0.9
-# BernoulliNB 의 train acc : [0.70833333 0.75       0.875      0.70833333 0.79166667]
-# BernoulliNB 의 acc : 0.7333333333333333
-# CalibratedClassifierCV 의 train acc : [0.875      0.95833333 0.70833333 0.875      1.        ]
-# CalibratedClassifierCV 의 acc : 0.7333333333333333
-# CategoricalNB 모델 오류
-# ClassifierChain 모델 오류
-# ComplementNB 모델 오류
-# DecisionTreeClassifier 의 train acc : [0.91666667 0.875      0.91666667 0.95833333 0.875     ]
-# DecisionTreeClassifier 의 acc : 0.9
-# DummyClassifier 의 train acc : [0.29166667 0.29166667 0.20833333 0.33333333 0.20833333]
-# DummyClassifier 의 acc : 0.1
-# ExtraTreeClassifier 의 train acc : [0.91666667 0.95833333 0.91666667 1.         0.83333333]
-# ExtraTreeClassifier 의 acc : 0.8333333333333334
-# ExtraTreesClassifier 의 train acc : [0.91666667 0.91666667 0.91666667 1.         0.91666667]
-# ExtraTreesClassifier 의 acc : 0.9333333333333333
-# FixedThresholdClassifier 모델 오류
-# GaussianNB 의 train acc : [0.95833333 0.95833333 0.91666667 1.         0.95833333]
-# GaussianNB 의 acc : 0.8666666666666667
-# GaussianProcessClassifier 의 train acc : [0.95833333 1.         0.91666667 1.         0.91666667]
-# GaussianProcessClassifier 의 acc : 0.8333333333333334
-# GradientBoostingClassifier 의 train acc : [0.91666667 0.875      0.91666667 0.95833333 0.95833333]
-# GradientBoostingClassifier 의 acc : 0.9
-# HistGradientBoostingClassifier 의 train acc : [0.95833333 0.83333333 0.91666667 0.95833333 0.875     ]
-# HistGradientBoostingClassifier 의 acc : 0.1
-# KNeighborsClassifier 의 train acc : [0.91666667 0.91666667 0.95833333 1.         0.91666667]
-# KNeighborsClassifier 의 acc : 0.9
-# LabelPropagation 의 train acc : [0.875      1.         0.95833333 1.         0.91666667]
-# LabelPropagation 의 acc : 0.8
-# LabelSpreading 의 train acc : [0.875      1.         0.95833333 1.         0.91666667]
-# LabelSpreading 의 acc : 0.8333333333333334
-# LinearDiscriminantAnalysis 의 train acc : [0.95833333 1.         0.91666667 1.         1.        ]
-# LinearDiscriminantAnalysis 의 acc : 0.9666666666666667
-# LinearSVC 의 train acc : [0.95833333 1.         0.875      0.91666667 1.        ]
-# LinearSVC 의 acc : 0.8
-# LogisticRegression 의 train acc : [0.95833333 1.         0.91666667 1.         0.95833333]
-# LogisticRegression 의 acc : 0.8666666666666667
-# LogisticRegressionCV 의 train acc : [0.95833333 1.         0.91666667 1.         0.875     ]
-# LogisticRegressionCV 의 acc : 0.9666666666666667
-# MLPClassifier 의 train acc : [0.91666667 1.         0.91666667 0.95833333 0.91666667]
-# MLPClassifier 의 acc : 0.9333333333333333
-# MultiOutputClassifier 모델 오류
-# MultinomialNB 모델 오류
-# NearestCentroid 의 train acc : [0.79166667 0.79166667 0.91666667 0.83333333 0.91666667]
-# NearestCentroid 의 acc : 0.8666666666666667
-# NuSVC 의 train acc : [0.95833333 1.         0.91666667 1.         0.91666667]
-# NuSVC 의 acc : 0.9
-# OneVsOneClassifier 모델 오류
-# OneVsRestClassifier 모델 오류
-# OutputCodeClassifier 모델 오류
-# PassiveAggressiveClassifier 의 train acc : [0.83333333 0.70833333 0.75       0.95833333 0.79166667]
-# PassiveAggressiveClassifier 의 acc : 0.7666666666666667
-# Perceptron 의 train acc : [0.79166667 0.91666667 0.75       0.91666667 0.95833333]
-# Perceptron 의 acc : 0.7666666666666667
-# QuadraticDiscriminantAnalysis 의 train acc : [0.95833333 1.         0.91666667 1.         0.91666667]
-# QuadraticDiscriminantAnalysis 모델 오류
-# RadiusNeighborsClassifier 의 train acc : [0.91666667        nan 0.91666667        nan 0.91666667]
-# RadiusNeighborsClassifier 모델 오류
-# RandomForestClassifier 의 train acc : [0.91666667 0.875      0.91666667 1.         0.95833333]
-# RandomForestClassifier 의 acc : 0.9
-# RidgeClassifier 의 train acc : [0.83333333 0.95833333 0.66666667 0.83333333 0.875     ]
-# RidgeClassifier 의 acc : 0.7333333333333333
-# RidgeClassifierCV 의 train acc : [0.83333333 0.95833333 0.66666667 0.83333333 0.875     ]
-# RidgeClassifierCV 의 acc : 0.7
-# SGDClassifier 의 train acc : [0.91666667 1.         0.875      0.91666667 0.875     ]
-# SGDClassifier 의 acc : 0.6666666666666666
-# SVC 의 train acc : [0.91666667 1.         0.91666667 1.         0.91666667]
-# SVC 의 acc : 0.9
-# SelfTrainingClassifier 모델 오류
-# StackingClassifier 모델 오류
-# TunedThresholdClassifierCV 모델 오류
-# VotingClassifier 모델 오류
+# ARDRegression 의 train r2 : [0.59688042 0.59699829 0.62143443 0.59068566 0.59633404]
+# ARDRegression 의 r2 : 0.5560245593958151
+# AdaBoostRegressor 의 train r2 : [0.4626617  0.38635217 0.40716217 0.46244702 0.52224905]
+# AdaBoostRegressor 의 r2 : 0.467565354030692
+# BaggingRegressor 의 train r2 : [0.78218088 0.78906714 0.78500722 0.77717109 0.79194196]
+# BaggingRegressor 의 r2 : 0.7126141793413523
+# BayesianRidge 의 train r2 : [0.60969226 0.6042173  0.63543146 0.60073314 0.60723159]
+# BayesianRidge 의 r2 : 0.5618386907322941
+# CCA 모델 오류
+# DecisionTreeRegressor 의 train r2 : [0.58377852 0.6309784  0.60131525 0.57665934 0.56980329]
+# DecisionTreeRegressor 의 r2 : 0.49183543396712703
+# DummyRegressor 의 train r2 : [-4.58127659e-04 -6.38358401e-05 -4.37492967e-07 -4.91472624e-04
+#  -6.29951876e-05]
+# DummyRegressor 의 r2 : -0.0003124538448660008
+# ElasticNet 의 train r2 : [0.42708313 0.42170746 0.43999508 0.41495041 0.43015619]
+# ElasticNet 의 r2 : 0.4060779070358749
+# ElasticNetCV 의 train r2 : [0.58124522 0.57556236 0.61620489 0.57567083 0.58365458]
+# ElasticNetCV 의 r2 : 0.5694270553195374
+# ExtraTreeRegressor 의 train r2 : [0.60257007 0.56240426 0.5906791  0.60727816 0.60989495]
+# ExtraTreeRegressor 의 r2 : 0.40704202888004515
+# ExtraTreesRegressor 의 train r2 : [0.80619587 0.80519879 0.81947914 0.79719436 0.8109041 ]
+# ExtraTreesRegressor 의 r2 : 0.7525985852142747
+# GammaRegressor 의 train r2 : [-4.70629350e-04 -6.36025757e-05 -4.40741796e-07 -4.85059096e-04
+#  -6.34683959e-05]
+# GammaRegressor 의 r2 : -0.0003124538448660008
