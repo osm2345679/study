@@ -39,7 +39,8 @@ model = GridSearchCV(
     parameters,
     cv=kfold,
     verbose=1,
-    n_jobs=-1
+    n_jobs=-1,
+    refit=True
 )
 
 #3. 컴파일, 훈련
